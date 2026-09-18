@@ -2,283 +2,67 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-  <title>SpaceBots Ultra</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpaceBots</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- HOOFDMENU -->
-  <div id="menu" class="screen">
+  <div id="menu">
+    <h1>SPACEBOTS</h1>
+    <p>THE LAST SURVIVORS</p>
 
-    <div class="hero">
-      <div class="logo">SPACEBOTS</div>
+    <button id="startButton">START GAME</button>
+    <button id="helpButton">HELP</button>
 
-      <div class="subtitle">
-        THE LAST SURVIVORS • ULTRA EDITION
-      </div>
+    <div id="menuStats">
+      Score: <span id="highscore">0</span>
+    </div>
+  </div>
 
-      <button id="startBtn" class="big-btn">
-        START GAME
-      </button>
+  <div id="game" class="hidden">
 
-      <button id="continueBtn" class="big-btn secondary">
-        CONTINUE
-      </button>
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="hud">
+      <div>❤️ HP: <span id="hp">100</span></div>
+      <div>⭐ SCORE: <span id="score">0</span></div>
+      <div>🌊 WAVE: <span id="wave">1</span></div>
     </div>
 
-    <div class="menu-grid">
+    <button id="pauseButton">Ⅱ</button>
 
-      <button data-panel="skins">
-        🎨 SKINS
-      </button>
-
-      <button data-panel="weapons">
-        🔫 WAPENS
-      </button>
-
-      <button data-panel="upgrades">
-        ⬆️ UPGRADES
-      </button>
-
-      <button data-panel="maps">
-        🗺️ KAARTEN
-      </button>
-
-      <button data-panel="settings">
-        ⚙️ INSTELLINGEN
-      </button>
-
-      <button data-panel="help">
-        ❓ HOW TO PLAY
-      </button>
-
-    </div>
-
-    <div class="stats">
-
-      <span>
-        HIGH SCORE:
-        <b id="menuHighscore">0</b>
-      </span>
-
-      <span>
-        BEST WAVE:
-        <b id="menuBestWave">0</b>
-      </span>
-
-      <span>
-        CREDITS:
-        <b id="menuCredits">0</b>
-      </span>
-
+    <div id="mobileControls">
+      <div id="joystick">MOVE</div>
+      <button id="fireButton">FIRE</button>
     </div>
 
   </div>
 
+  <div id="gameOver" class="hidden">
+    <h1>GAME OVER</h1>
+    <p>Score: <span id="finalScore">0</span></p>
 
-  <!-- MENU PANELEN -->
-
-  <div id="panel" class="panel hidden">
-
-    <div class="panel-box">
-
-      <button id="closePanel" class="close">
-        ✕
-      </button>
-
-      <h2 id="panelTitle"></h2>
-
-      <div id="panelContent"></div>
-
-    </div>
-
+    <button id="restartButton">OPNIEUW</button>
+    <button id="menuButton">MENU</button>
   </div>
 
+  <div id="help" class="hidden">
+    <div class="helpBox">
+      <h2>HOW TO PLAY</h2>
 
-  <!-- GAME -->
+      <p>🕹️ WASD of pijltjestoetsen = bewegen</p>
+      <p>🖱️ Muis = richten</p>
+      <p>🖱️ Klik = schieten</p>
+      <p>📱 Telefoon = joystick + FIRE</p>
+      <p>🤖 Versla de robots</p>
+      <p>🚫 Geen bloed</p>
 
-  <div id="game" class="screen hidden">
-
-    <canvas
-      id="gameCanvas"
-      width="1280"
-      height="720">
-    </canvas>
-
-
-    <!-- HUD -->
-
-    <div class="hud">
-
-      <div class="hud-top">
-
-        <span>
-          SCORE
-          <b id="score">0</b>
-        </span>
-
-        <span>
-          WAVE
-          <b id="wave">1</b>
-        </span>
-
-        <span>
-          KILLS
-          <b id="kills">0</b>
-        </span>
-
-        <span>
-          COMBO
-          <b id="combo">0</b>
-        </span>
-
-      </div>
-
-
-      <div class="bars">
-
-        HP
-
-        <div class="bar">
-          <i id="hpBar"></i>
-        </div>
-
-        SHIELD
-
-        <div class="bar">
-          <i id="shieldBar"></i>
-        </div>
-
-        ENERGY
-
-        <div class="bar">
-          <i id="energyBar"></i>
-        </div>
-
-      </div>
-
-
-      <div class="weapon-hud">
-
-        🔫
-        <b id="weaponName">
-          BLASTER
-        </b>
-
-      </div>
-
+      <button id="closeHelp">TERUG</button>
     </div>
-
-
-    <!-- BOSS -->
-
-    <div id="bossBar" class="boss hidden">
-
-      <b id="bossName">
-        BOSS
-      </b>
-
-      <div class="bar">
-        <i id="bossHpBar"></i>
-      </div>
-
-    </div>
-
-
-    <!-- PAUZE -->
-
-    <button id="pauseBtn" class="pause-btn">
-      Ⅱ
-    </button>
-
-
-    <!-- TOUCH CONTROLS -->
-
-    <div id="touchControls">
-
-      <div id="moveStick" class="stick">
-        <div class="knob"></div>
-      </div>
-
-      <div id="aimStick" class="stick">
-        <div class="knob"></div>
-      </div>
-
-      <button id="fireBtn" class="fire-btn">
-        FIRE
-      </button>
-
-    </div>
-
-
-    <!-- PAUSE SCHERM -->
-
-    <div id="pauseOverlay" class="overlay hidden">
-
-      <h1>PAUSED</h1>
-
-      <button id="resumeBtn" class="big-btn">
-        RESUME
-      </button>
-
-      <button id="menuBtn1" class="big-btn secondary">
-        MENU
-      </button>
-
-    </div>
-
-
-    <!-- GAME OVER -->
-
-    <div id="gameOverOverlay" class="overlay hidden">
-
-      <h1>GAME OVER</h1>
-
-      <p>
-        Score:
-        <b id="finalScore">0</b>
-      </p>
-
-      <button id="restartBtn" class="big-btn">
-        OPNIEUW
-      </button>
-
-      <button id="menuBtn2" class="big-btn secondary">
-        MENU
-      </button>
-
-    </div>
-
-
-    <!-- VICTORY -->
-
-    <div id="victoryOverlay" class="overlay hidden">
-
-      <h1>VICTORY!</h1>
-
-      <p>
-        Je hebt de boss verslagen!
-      </p>
-
-      <button id="victoryRestart" class="big-btn">
-        NOG EEN KEER
-      </button>
-
-      <button id="menuBtn3" class="big-btn secondary">
-        MENU
-      </button>
-
-    </div>
-
   </div>
 
-
-  <script src="app.js"></script>
-
+  <script src="a.js"></script>
 </body>
 </html>
