@@ -1,175 +1,123 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SpaceBots Ultra</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SPACEBOTS ULTRA</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div id="menu" class="screen">
-    <div class="hero">
-        <div class="logo">SPACEBOTS</div>
-        <div class="sub">THE LAST SURVIVORS • ULTRA</div>
+  <div class="stars"></div>
 
-        <button id="start" class="big">START GAME</button>
-        <button id="cont" class="big dark">CONTINUE</button>
-    </div>
+  <div class="hero">
+    <div class="logo">SPACE<span>BOTS</span></div>
+    <div class="sub">THE LAST SURVIVORS • ULTRA</div>
+    <div class="line"></div>
 
-    <div class="grid">
-        <button data-panel="skins">🎨 SKINS</button>
-        <button data-panel="weapons">🔫 WAPENS</button>
-        <button data-panel="upgrades">⬆️ UPGRADES</button>
-        <button data-panel="maps">🗺️ KAARTEN</button>
-        <button data-panel="settings">⚙️ INSTELLINGEN</button>
-        <button data-panel="help">❓ HELP</button>
-    </div>
+    <button id="start" class="big">▶ START GAME</button>
+    <button id="cont" class="big dark">↻ CONTINUE</button>
+  </div>
 
-    <div class="stats">
-        SCORE <b id="hs">0</b>
-        • WAVE <b id="bw">0</b>
-        • CREDITS <b id="cr">0</b>
-    </div>
+  <div class="grid">
+    <button data-panel="skins">🎨 SKINS</button>
+    <button data-panel="weapons">🔫 WAPENS</button>
+    <button data-panel="upgrades">⬆ UPGRADES</button>
+    <button data-panel="maps">🗺 KAARTEN</button>
+    <button data-panel="settings">⚙ INSTELLINGEN</button>
+    <button data-panel="help">❓ HELP</button>
+  </div>
+
+  <div class="stats">
+    SCORE <b id="hs">0</b>
+    <i>•</i>
+    WAVE <b id="bw">0</b>
+    <i>•</i>
+    CREDITS <b id="cr">300</b>
+  </div>
 </div>
-
 
 <div id="panel" class="panel hide">
-    <div class="box">
-        <button id="close" class="x">✕</button>
-        <h2 id="pt"></h2>
-        <div id="pc"></div>
-    </div>
+  <div class="box">
+    <button id="close" class="x">✕</button>
+    <h2 id="pt"></h2>
+    <div id="pc"></div>
+  </div>
 </div>
-
 
 <div id="game" class="screen hide">
 
-    <canvas id="c" width="1280" height="720"></canvas>
+  <canvas id="c" width="1280" height="720"></canvas>
+  <div class="scan"></div>
 
-    <div class="hud">
-
-        <div class="top">
-            SCORE <b id="score">0</b>
-            &nbsp; WAVE <b id="wave">1</b>
-            &nbsp; KILLS <b id="kills">0</b>
-            &nbsp; COMBO <b id="combo">0</b>
-        </div>
-
-        <div class="bars">
-
-            HP
-            <div class="bar">
-                <i id="hp"></i>
-            </div>
-
-            SHIELD
-            <div class="bar">
-                <i id="sh"></i>
-            </div>
-
-            ENERGY
-            <div class="bar">
-                <i id="en"></i>
-            </div>
-
-        </div>
-
-        <div class="gun">
-            🔫 <b id="gun">BLASTER</b>
-        </div>
-
+  <div class="hud">
+    <div class="top">
+      SCORE <b id="score">0</b>
+      　WAVE <b id="wave">1</b>
+      　KILLS <b id="kills">0</b>
     </div>
 
+    <div class="bars">
+      HP
+      <div class="bar"><i id="hp"></i></div>
 
-    <div id="boss" class="boss hide">
-        <b id="bn">VOID CORE</b>
+      SHIELD
+      <div class="bar"><i id="sh"></i></div>
 
-        <div class="bar">
-            <i id="bh"></i>
-        </div>
+      ENERGY
+      <div class="bar"><i id="en"></i></div>
     </div>
 
+    <div class="gun">
+      🔫 <b id="gun">BLASTER</b>
+    </div>
+  </div>
 
-    <div id="minimap">
-        <canvas id="mini" width="180" height="100"></canvas>
+  <div id="boss" class="boss hide">
+    <b id="bn">VOID CORE</b>
+    <div class="bar"><i id="bh"></i></div>
+  </div>
+
+  <button id="pause" class="pause">Ⅱ</button>
+
+  <!-- TELEFOON / TABLET -->
+  <div id="touch">
+    <div id="move" class="stick">
+      <i></i>
     </div>
 
-
-    <button id="pause" class="pause">Ⅱ</button>
-
-
-    <div id="touch">
-
-        <div id="move" class="stick">
-            <i></i>
-        </div>
-
-        <div id="aim" class="stick">
-            <i></i>
-        </div>
-
-        <button id="fire">FIRE</button>
-
+    <div id="aim" class="stick">
+      <i></i>
     </div>
 
+    <button id="fire">FIRE</button>
+  </div>
 
-    <div id="pauseBox" class="overlay hide">
+  <div id="pauseBox" class="overlay hide">
+    <h1>PAUSED</h1>
+    <button id="resume" class="big">RESUME</button>
+    <button class="big dark" id="m1">MENU</button>
+  </div>
 
-        <h1>PAUSED</h1>
+  <div id="over" class="overlay hide">
+    <h1>GAME OVER</h1>
+    <p>Score: <b id="final">0</b></p>
 
-        <button id="resume" class="big">
-            RESUME
-        </button>
+    <button id="again" class="big">OPNIEUW</button>
+    <button class="big dark" id="m2">MENU</button>
+  </div>
 
-        <button class="big dark" id="m1">
-            MENU
-        </button>
+  <div id="win" class="overlay hide">
+    <h1>VICTORY!</h1>
+    <p>Boss verslagen!</p>
 
-    </div>
-
-
-    <div id="over" class="overlay hide">
-
-        <h1>GAME OVER</h1>
-
-        <p>
-            Score:
-            <b id="final">0</b>
-        </p>
-
-        <button id="again" class="big">
-            OPNIEUW
-        </button>
-
-        <button class="big dark" id="m2">
-            MENU
-        </button>
-
-    </div>
-
-
-    <div id="win" class="overlay hide">
-
-        <h1>VICTORY!</h1>
-
-        <p>Boss verslagen!</p>
-
-        <button id="again2" class="big">
-            NOG EEN KEER
-        </button>
-
-        <button class="big dark" id="m3">
-            MENU
-        </button>
-
-    </div>
+    <button id="again2" class="big">NOG EEN KEER</button>
+    <button class="big dark" id="m3">MENU</button>
+  </div>
 
 </div>
 
-
 <script src="a.js"></script>
-
 </body>
 </html>
