@@ -1,465 +1,263 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
 body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-
-    background: #020617;
-
-    color: #e0f2fe;
-
-    font-family:
-        "Segoe UI",
-        Arial,
-        sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #030712;
+  color: white;
 }
 
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+button {
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
 }
-
-
-/* =========================
-   ALGEMEEN
-========================= */
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
+/* MENU */
 
-/* =========================
-   STARTMENU
-========================= */
-
-.screen {
-
-    width: min(1000px, 100vw);
-    height: min(650px, 100vh);
-
-    position: relative;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at 50% 45%,
-            #172554 0,
-            #020617 62%,
-            #000 100%
-        );
-
-    border: 2px solid #38bdf8;
-
-    box-shadow:
-        0 0 50px #0ea5e966;
+#menu {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at center, #10284a 0%, #050b18 45%, #02040a 100%);
 }
 
-
-/* Sterren */
-
-.screen::before {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    background-image:
-        radial-gradient(
-            #ffffff 1px,
-            transparent 1px
-        ),
-        radial-gradient(
-            #7dd3fc 1px,
-            transparent 1px
-        );
-
-    background-size:
-        90px 90px,
-        150px 150px;
-
-    background-position:
-        10px 20px,
-        40px 80px;
-
-    opacity: .3;
-
-    animation:
-        stars 18s linear infinite;
+#menu h1 {
+  margin: 0;
+  font-size: clamp(50px, 10vw, 110px);
+  letter-spacing: 8px;
+  color: #4de3ff;
+  text-shadow:
+    0 0 10px #4de3ff,
+    0 0 30px #168cff,
+    0 0 60px #168cff;
 }
 
-
-/* Logo */
-
-.logo {
-
-    position: relative;
-
-    z-index: 1;
-
-    font-size: 82px;
-
-    font-weight: 900;
-
-    letter-spacing: 7px;
-
-    text-shadow:
-        0 0 25px #38bdf8;
+#menu p {
+  color: #8fa9c5;
+  letter-spacing: 5px;
+  margin-bottom: 40px;
 }
 
-.logo span {
-
-    color: #22d3ee;
+#startButton,
+#helpButton,
+#restartButton,
+#menuButton,
+#closeHelp {
+  width: 250px;
+  padding: 16px;
+  margin: 7px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #19d8ff, #285cff);
+  font-size: 17px;
+  box-shadow: 0 0 20px #159cff55;
 }
 
-
-/* Subtitel */
-
-.subtitle {
-
-    position: relative;
-
-    z-index: 1;
-
-    letter-spacing: 9px;
-
-    color: #94a3b8;
-
-    margin-top: -10px;
-
-    margin-bottom: 45px;
+#helpButton,
+#menuButton {
+  background: #111d31;
+  border: 1px solid #36506e;
 }
 
-
-/* Menu kaart */
-
-.menu-card {
-
-    position: relative;
-
-    z-index: 1;
-
-    background: #020617cc;
-
-    border: 1px solid #38bdf8aa;
-
-    padding: 35px 55px;
-
-    border-radius: 20px;
-
-    text-align: center;
-
-    box-shadow:
-        0 0 35px #0284c744;
+#startButton:hover,
+#helpButton:hover,
+#restartButton:hover,
+#menuButton:hover,
+#closeHelp:hover {
+  transform: scale(1.04);
 }
 
-.menu-card p {
-
-    color: #94a3b8;
-
-    margin: 8px 0;
+#menuStats {
+  margin-top: 30px;
+  color: #8fa9c5;
 }
 
-
-/* Startknop */
-
-.main-btn {
-
-    border: 0;
-
-    border-radius: 12px;
-
-    padding: 17px 48px;
-
-    font-size: 21px;
-
-    font-weight: 900;
-
-    color: #00111c;
-
-    background: #67e8f9;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 0 22px #22d3ee99;
-
-    transition: .2s;
-
-    margin-bottom: 15px;
-}
-
-.main-btn:hover {
-
-    transform: scale(1.06);
-
-    background: white;
-}
-
-
-/* =========================
-   GAME
-========================= */
+/* GAME */
 
 #game {
-
-    position: relative;
-
-    width: min(1000px, 100vw);
-
-    height: min(650px, 100vh);
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #030712;
+}
 
-canvas {
+/* HUD */
 
+#hud {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+
+  font-size: 17px;
+  pointer-events: none;
+  text-shadow: 0 0 8px black;
+}
+
+#hud span {
+  color: #50e2ff;
+  font-weight: bold;
+}
+
+#pauseButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+
+  width: 50px;
+  height: 45px;
+
+  border-radius: 10px;
+  background: #101d30dd;
+  border: 1px solid #46627e;
+  font-size: 20px;
+}
+
+/* GAME OVER */
+
+#gameOver {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: #02050cee;
+}
+
+#gameOver h1 {
+  font-size: clamp(50px, 10vw, 100px);
+  color: #ff526c;
+  text-shadow: 0 0 30px #ff2344;
+}
+
+/* HELP */
+
+#help {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #02050cee;
+  z-index: 20;
+}
+
+.helpBox {
+  width: min(500px, 90%);
+  padding: 30px;
+  border-radius: 20px;
+  background: #091427;
+  border: 1px solid #34577b;
+  text-align: center;
+}
+
+.helpBox h2 {
+  color: #4de3ff;
+}
+
+/* MOBILE */
+
+#mobileControls {
+  display: none;
+}
+
+#joystick {
+  position: absolute;
+  left: 25px;
+  bottom: 25px;
+
+  width: 120px;
+  height: 120px;
+
+  border-radius: 50%;
+  border: 2px solid #ffffff55;
+  background: #ffffff15;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff88;
+  user-select: none;
+}
+
+#fireButton {
+  position: absolute;
+  right: 25px;
+  bottom: 40px;
+
+  width: 90px;
+  height: 90px;
+
+  border-radius: 50%;
+
+  background: #ff405888;
+  border: 2px solid #ff8899;
+
+  user-select: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+
+  #mobileControls {
     display: block;
+  }
 
-    width: 100%;
+  #hud {
+    font-size: 12px;
+    gap: 10px;
+  }
 
-    height: 100%;
-
-    border: 2px solid #38bdf8;
-
-    background: #020617;
-
-    cursor: crosshair;
+  #pauseButton {
+    top: 55px;
+  }
 }
 
-
-/* =========================
-   HUD
-========================= */
-
-.hud {
-
-    position: absolute;
-
-    top: 14px;
-
-    left: 18px;
-
-    right: 18px;
-
-    display: flex;
-
-    gap: 12px;
-
-    align-items: center;
-
-    pointer-events: none;
-}
-
-
-.hud-box,
-.health {
-
-    background: #020617c9;
-
-    border: 1px solid #38bdf855;
-
-    padding: 8px 13px;
-
-    border-radius: 10px;
-
-    backdrop-filter: blur(4px);
-}
-
-
-.hud-box b {
-
-    color: #67e8f9;
-
-    margin-left: 5px;
-}
-
-
-/* =========================
-   LEVENSBALK
-========================= */
-
-.health {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    flex: 1;
-
-    max-width: 280px;
-}
-
-
-.health-track {
-
-    height: 13px;
-
-    background: #172033;
-
-    border-radius: 10px;
-
-    overflow: hidden;
-
-    flex: 1;
-}
-
-
-.health-track i {
-
-    display: block;
-
-    height: 100%;
-
-    width: 100%;
-
-    background: #22c55e;
-
-    transition: .15s;
-}
-
-
-.health b {
-
-    min-width: 30px;
-}
-
-
-/* =========================
-   WAPENS
-========================= */
-
-#weaponBar {
-
-    position: absolute;
-
-    bottom: 14px;
-
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    display: flex;
-
-    gap: 8px;
-}
-
-
-#weaponBar button {
-
-    background: #020617dd;
-
-    color: #bae6fd;
-
-    border: 1px solid #38bdf866;
-
-    padding: 8px 12px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-}
-
-
-#weaponBar button:hover {
-
-    background: #075985;
-}
-
-
-#weaponBar button.active {
-
-    background: #0891b2;
-
-    color: white;
-
-    box-shadow:
-        0 0 15px #22d3ee77;
-}
-
-
-/* =========================
-   PAUZE / GAME OVER
-========================= */
-
-.overlay {
-
-    position: absolute;
-
-    inset: 0;
-
-    background: #020617d9;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    text-align: center;
-}
-
-
-.overlay h1,
-.overlay h2 {
-
-    font-size: 55px;
-
-    margin: 0 0 10px;
-
-    text-shadow:
-        0 0 20px #38bdf8;
-}
-
-
-.overlay h1 {
-
-    color: #fb7185;
-}
-
-
-.overlay p {
-
-    font-size: 20px;
-}
-
-
-.overlay .main-btn {
-
-    margin-top: 20px;
-}
-
-
-/* =========================
-   ANIMATIE
-========================= */
-
-@keyframes stars {
-
-    to {
-
-        background-position:
-            190px 200px,
-            340px 380px;
-    }
+@media (max-width: 600px) {
+
+  #menu h1 {
+    font-size: 48px;
+    letter-spacing: 3px;
+  }
+
+  #menu p {
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  #startButton,
+  #helpButton {
+    width: 210px;
+  }
 }
