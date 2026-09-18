@@ -1,123 +1,546 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>SPACEBOTS ULTRA</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpaceBots Ultra</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="menu" class="screen">
-  <div class="stars"></div>
+  <!-- ================= START MENU ================= -->
+  <section id="startScreen" class="screen active">
 
-  <div class="hero">
-    <div class="logo">SPACE<span>BOTS</span></div>
-    <div class="sub">THE LAST SURVIVORS • ULTRA</div>
-    <div class="line"></div>
+    <div class="stars"></div>
 
-    <button id="start" class="big">▶ START GAME</button>
-    <button id="cont" class="big dark">↻ CONTINUE</button>
-  </div>
-
-  <div class="grid">
-    <button data-panel="skins">🎨 SKINS</button>
-    <button data-panel="weapons">🔫 WAPENS</button>
-    <button data-panel="upgrades">⬆ UPGRADES</button>
-    <button data-panel="maps">🗺 KAARTEN</button>
-    <button data-panel="settings">⚙ INSTELLINGEN</button>
-    <button data-panel="help">❓ HELP</button>
-  </div>
-
-  <div class="stats">
-    SCORE <b id="hs">0</b>
-    <i>•</i>
-    WAVE <b id="bw">0</b>
-    <i>•</i>
-    CREDITS <b id="cr">300</b>
-  </div>
-</div>
-
-<div id="panel" class="panel hide">
-  <div class="box">
-    <button id="close" class="x">✕</button>
-    <h2 id="pt"></h2>
-    <div id="pc"></div>
-  </div>
-</div>
-
-<div id="game" class="screen hide">
-
-  <canvas id="c" width="1280" height="720"></canvas>
-  <div class="scan"></div>
-
-  <div class="hud">
-    <div class="top">
-      SCORE <b id="score">0</b>
-      　WAVE <b id="wave">1</b>
-      　KILLS <b id="kills">0</b>
+    <div class="logo">
+      <div class="logo-icon">✦</div>
+      <div>
+        <h1>SPACEBOTS</h1>
+        <p>THE LAST SURVIVORS</p>
+      </div>
     </div>
 
-    <div class="bars">
-      HP
-      <div class="bar"><i id="hp"></i></div>
+    <div class="hero">
+      <div class="hero-text">
+        <span class="tag">ULTRA EDITION</span>
+        <h2>VECHT TEGEN DE BOTS</h2>
+        <p>
+          Overleef eindeloze waves, versla gigantische bosses,
+          koop nieuwe wapens en verbeter je robot.
+        </p>
 
-      SHIELD
-      <div class="bar"><i id="sh"></i></div>
+        <button id="startBtn" class="main-button">
+          ▶ START GAME
+        </button>
 
-      ENERGY
-      <div class="bar"><i id="en"></i></div>
+        <button id="continueBtn" class="secondary-button">
+          CONTINUE
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div>
+          <strong id="menuHighscore">0</strong>
+          <span>HIGHSCORE</span>
+        </div>
+        <div>
+          <strong>12+</strong>
+          <span>ROBOTS</span>
+        </div>
+        <div>
+          <strong>6</strong>
+          <span>WAPENS</span>
+        </div>
+        <div>
+          <strong>5</strong>
+          <span>MAPS</span>
+        </div>
+      </div>
     </div>
 
-    <div class="gun">
-      🔫 <b id="gun">BLASTER</b>
+    <div class="menu-grid">
+
+      <button class="menu-card" data-panel="weaponsPanel">
+        <span>🔫</span>
+        <b>WAPENKAMER</b>
+        <small>Kies je wapen</small>
+      </button>
+
+      <button class="menu-card" data-panel="upgradePanel">
+        <span>⚡</span>
+        <b>UPGRADES</b>
+        <small>Maak je robot sterker</small>
+      </button>
+
+      <button class="menu-card" data-panel="mapPanel">
+        <span>🌌</span>
+        <b>KAARTEN</b>
+        <small>Kies een planeet</small>
+      </button>
+
+      <button class="menu-card" data-panel="achievementsPanel">
+        <span>🏆</span>
+        <b>ACHIEVEMENTS</b>
+        <small>Bekijk je prestaties</small>
+      </button>
+
+      <button class="menu-card" data-panel="settingsPanel">
+        <span>⚙️</span>
+        <b>INSTELLINGEN</b>
+        <small>Pas het spel aan</small>
+      </button>
+
+      <button class="menu-card" data-panel="helpPanel">
+        <span>❓</span>
+        <b>HOW TO PLAY</b>
+        <small>Besturing</small>
+      </button>
+
     </div>
-  </div>
 
-  <div id="boss" class="boss hide">
-    <b id="bn">VOID CORE</b>
-    <div class="bar"><i id="bh"></i></div>
-  </div>
+  </section>
 
-  <button id="pause" class="pause">Ⅱ</button>
 
-  <!-- TELEFOON / TABLET -->
-  <div id="touch">
-    <div id="move" class="stick">
-      <i></i>
+  <!-- ================= WEAPONS ================= -->
+
+  <section id="weaponsPanel" class="subscreen">
+    <div class="panel-box">
+
+      <button class="backBtn">← TERUG</button>
+
+      <h2>🔫 WAPENKAMER</h2>
+      <p>Kies je favoriete wapen.</p>
+
+      <div id="weaponCards" class="cards"></div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= UPGRADES ================= -->
+
+  <section id="upgradePanel" class="subscreen">
+    <div class="panel-box">
+
+      <button class="backBtn">← TERUG</button>
+
+      <h2>⚡ UPGRADES</h2>
+
+      <div class="credits">
+        Credits:
+        <strong id="creditsValue">0</strong>
+      </div>
+
+      <div id="upgradeCards" class="cards"></div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= MAPS ================= -->
+
+  <section id="mapPanel" class="subscreen">
+    <div class="panel-box">
+
+      <button class="backBtn">← TERUG</button>
+
+      <h2>🌌 KAARTEN</h2>
+
+      <div id="mapCards" class="cards"></div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= ACHIEVEMENTS ================= -->
+
+  <section id="achievementsPanel" class="subscreen">
+    <div class="panel-box">
+
+      <button class="backBtn">← TERUG</button>
+
+      <h2>🏆 ACHIEVEMENTS</h2>
+
+      <div class="achievement-summary">
+        <div>
+          <b id="achievementCount">0</b>
+          <span>ACHIEVEMENTS</span>
+        </div>
+
+        <div>
+          <b id="achievementKills">0</b>
+          <span>KILLS</span>
+        </div>
+
+        <div>
+          <b id="achievementWave">0</b>
+          <span>BEST WAVE</span>
+        </div>
+      </div>
+
+      <div id="achievementCards" class="cards"></div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= SETTINGS ================= -->
+
+  <section id="settingsPanel" class="subscreen">
+    <div class="panel-box">
+
+      <button class="backBtn">← TERUG</button>
+
+      <h2>⚙️ INSTELLINGEN</h2>
+
+      <div class="setting-row">
+        <div>
+          <b>Geluid</b>
+          <small>Schiet- en explosiegeluiden</small>
+        </div>
+        <input type="checkbox" id="soundToggle" checked>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <b>Particles</b>
+          <small>Explosies en energie-effecten</small>
+        </div>
+        <input type="checkbox" id="particlesToggle" checked>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <b>Screen Shake</b>
+          <small>Camera-effect bij zware hits</small>
+        </div>
+        <input type="checkbox" id="shakeToggle" checked>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <b>Auto Fire</b>
+          <small>Blijf schieten wanneer je muisknop ingedrukt is</small>
+        </div>
+        <input type="checkbox" id="autoFireToggle">
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <b>Moeilijkheid</b>
+          <small>Pas de vijanden aan</small>
+        </div>
+
+        <select id="difficultySelect">
+          <option value="easy">Easy</option>
+          <option value="normal" selected>Normal</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <button id="resetSaveBtn" class="danger-button">
+        RESET SAVE
+      </button>
+
+    </div>
+  </section>
+
+
+  <!-- ================= HELP ================= -->
+
+  <section id="helpPanel" class="subscreen">
+    <div class="panel-box">
+
+      <button class="backBtn">← TERUG</button>
+
+      <h2>❓ HOW TO PLAY</h2>
+
+      <div class="controls">
+
+        <div>
+          <b>W A S D</b>
+          <span>Bewegen</span>
+        </div>
+
+        <div>
+          <b>MUISKLIK</b>
+          <span>Schieten</span>
+        </div>
+
+        <div>
+          <b>1 - 6</b>
+          <span>Wapen kiezen</span>
+        </div>
+
+        <div>
+          <b>P</b>
+          <span>Pauzeren</span>
+        </div>
+
+        <div>
+          <b>ESC</b>
+          <span>Terug naar menu</span>
+        </div>
+
+      </div>
+
+      <p class="help-text">
+        Versla robots, pak energie op, overleef waves en versla
+        de grote bosses. Er is geen bloed; alle schade bestaat uit
+        energie- en explosie-effecten.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- ================= GAME ================= -->
+
+  <section id="gameScreen" class="game-screen">
+
+    <canvas id="gameCanvas" width="1280" height="720"></canvas>
+
+    <!-- HUD -->
+
+    <div class="hud">
+
+      <div class="hud-top">
+
+        <div class="brand-small">
+          SPACEBOTS
+          <span>ULTRA</span>
+        </div>
+
+        <div class="score-box">
+          <small>SCORE</small>
+          <b id="scoreText">0</b>
+        </div>
+
+        <div class="wave-box">
+          <small>WAVE</small>
+          <b id="waveText">1</b>
+          <div class="wave-progress">
+            <i id="waveProgress"></i>
+          </div>
+        </div>
+
+        <div class="combo-box">
+          <small>COMBO</small>
+          <b id="comboText">x1</b>
+        </div>
+
+        <div class="time-box">
+          <small>TIME</small>
+          <b id="timeText">00:00</b>
+        </div>
+
+        <div class="kills-box">
+          <small>KILLS</small>
+          <b id="killsText">0</b>
+        </div>
+
+      </div>
+
+
+      <div class="hud-bottom">
+
+        <div class="bars">
+
+          <div class="bar-row">
+            <span>HP</span>
+            <div class="bar">
+              <i id="hpBar"></i>
+            </div>
+            <b id="hpText">100</b>
+          </div>
+
+          <div class="bar-row">
+            <span>SHIELD</span>
+            <div class="bar">
+              <i id="shieldBar"></i>
+            </div>
+            <b id="shieldText">100</b>
+          </div>
+
+          <div class="bar-row">
+            <span>ENERGY</span>
+            <div class="bar">
+              <i id="energyBar"></i>
+            </div>
+            <b id="energyText">100</b>
+          </div>
+
+        </div>
+
+
+        <div class="weapon-hud">
+
+          <div id="weaponIcon">🔫</div>
+
+          <div>
+            <small>WEAPON</small>
+            <b id="weaponName">BLASTER</b>
+          </div>
+
+          <span id="weaponStatus">READY</span>
+
+        </div>
+
+
+        <canvas id="miniMap" width="190" height="120"></canvas>
+
+      </div>
+
     </div>
 
-    <div id="aim" class="stick">
-      <i></i>
+
+    <!-- BOSS BAR -->
+
+    <div id="bossContainer" class="boss-container">
+
+      <div class="boss-name" id="bossName">
+        BOSS
+      </div>
+
+      <div class="boss-bar">
+        <i id="bossBar"></i>
+      </div>
+
     </div>
 
-    <button id="fire">FIRE</button>
-  </div>
 
-  <div id="pauseBox" class="overlay hide">
-    <h1>PAUSED</h1>
-    <button id="resume" class="big">RESUME</button>
-    <button class="big dark" id="m1">MENU</button>
-  </div>
+    <!-- WAVE BANNER -->
 
-  <div id="over" class="overlay hide">
-    <h1>GAME OVER</h1>
-    <p>Score: <b id="final">0</b></p>
+    <div id="waveBanner" class="wave-banner">
+      <span>WAVE</span>
+      <b id="waveBannerNumber">1</b>
+    </div>
 
-    <button id="again" class="big">OPNIEUW</button>
-    <button class="big dark" id="m2">MENU</button>
-  </div>
 
-  <div id="win" class="overlay hide">
-    <h1>VICTORY!</h1>
-    <p>Boss verslagen!</p>
+    <!-- PICKUP MESSAGE -->
 
-    <button id="again2" class="big">NOG EEN KEER</button>
-    <button class="big dark" id="m3">MENU</button>
-  </div>
+    <div id="pickupNotice" class="pickup-notice">
+      ENERGY +25
+    </div>
 
-</div>
 
-<script src="a.js"></script>
+    <!-- COMBO -->
+
+    <div id="comboPopup" class="combo-popup">
+      COMBO x2
+    </div>
+
+
+    <!-- PAUSE -->
+
+    <div id="pauseOverlay" class="game-overlay">
+
+      <div class="overlay-box">
+
+        <h2>PAUSED</h2>
+        <p>Druk op P om verder te gaan.</p>
+
+        <button id="resumeBtn" class="main-button">
+          ▶ VERDER
+        </button>
+
+        <button id="pauseMenuBtn" class="secondary-button">
+          MENU
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- GAME OVER -->
+
+    <div id="gameOverOverlay" class="game-overlay">
+
+      <div class="overlay-box">
+
+        <h2>GAME OVER</h2>
+
+        <p>Je robot is vernietigd.</p>
+
+        <div class="result-grid">
+
+          <div>
+            <small>SCORE</small>
+            <b id="finalScore">0</b>
+          </div>
+
+          <div>
+            <small>WAVE</small>
+            <b id="finalWave">1</b>
+          </div>
+
+          <div>
+            <small>KILLS</small>
+            <b id="finalKills">0</b>
+          </div>
+
+        </div>
+
+        <p id="newRecordText" class="record">
+          ★ NIEUW RECORD ★
+        </p>
+
+        <button id="restartBtn" class="main-button">
+          ↻ OPNIEUW
+        </button>
+
+        <button id="gameOverMenuBtn" class="secondary-button">
+          MENU
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- VICTORY -->
+
+    <div id="victoryOverlay" class="game-overlay">
+
+      <div class="overlay-box">
+
+        <h2>VICTORY!</h2>
+
+        <p>Je hebt de Star Destroyer verslagen.</p>
+
+        <div class="result-grid">
+
+          <div>
+            <small>SCORE</small>
+            <b id="victoryScore">0</b>
+          </div>
+
+          <div>
+            <small>WAVE</small>
+            <b id="victoryWave">10</b>
+          </div>
+
+          <div>
+            <small>KILLS</small>
+            <b id="victoryKills">0</b>
+          </div>
+
+        </div>
+
+        <button id="victoryMenuBtn" class="main-button">
+          MENU
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <script src="app.js"></script>
+
 </body>
 </html>
