@@ -1,68 +1,175 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SpaceBots</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SpaceBots Ultra</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div id="menu">
-    <h1>SPACEBOTS</h1>
-    <p>THE LAST SURVIVORS</p>
+<div id="menu" class="screen">
+    <div class="hero">
+        <div class="logo">SPACEBOTS</div>
+        <div class="sub">THE LAST SURVIVORS • ULTRA</div>
 
-    <button id="startButton">START GAME</button>
-    <button id="helpButton">HELP</button>
-
-    <div id="menuStats">
-      Score: <span id="highscore">0</span>
-    </div>
-  </div>
-
-  <div id="game" class="hidden">
-
-    <canvas id="gameCanvas"></canvas>
-
-    <div id="hud">
-      <div>❤️ HP: <span id="hp">100</span></div>
-      <div>⭐ SCORE: <span id="score">0</span></div>
-      <div>🌊 WAVE: <span id="wave">1</span></div>
+        <button id="start" class="big">START GAME</button>
+        <button id="cont" class="big dark">CONTINUE</button>
     </div>
 
-    <button id="pauseButton">Ⅱ</button>
-
-    <div id="mobileControls">
-      <div id="joystick">MOVE</div>
-      <button id="fireButton">FIRE</button>
+    <div class="grid">
+        <button data-panel="skins">🎨 SKINS</button>
+        <button data-panel="weapons">🔫 WAPENS</button>
+        <button data-panel="upgrades">⬆️ UPGRADES</button>
+        <button data-panel="maps">🗺️ KAARTEN</button>
+        <button data-panel="settings">⚙️ INSTELLINGEN</button>
+        <button data-panel="help">❓ HELP</button>
     </div>
 
-  </div>
-
-  <div id="gameOver" class="hidden">
-    <h1>GAME OVER</h1>
-    <p>Score: <span id="finalScore">0</span></p>
-
-    <button id="restartButton">OPNIEUW</button>
-    <button id="menuButton">MENU</button>
-  </div>
-
-  <div id="help" class="hidden">
-    <div class="helpBox">
-      <h2>HOW TO PLAY</h2>
-
-      <p>🕹️ WASD of pijltjestoetsen = bewegen</p>
-      <p>🖱️ Muis = richten</p>
-      <p>🖱️ Klik = schieten</p>
-      <p>📱 Telefoon = joystick + FIRE</p>
-      <p>🤖 Versla de robots</p>
-      <p>🚫 Geen bloed</p>
-
-      <button id="closeHelp">TERUG</button>
+    <div class="stats">
+        SCORE <b id="hs">0</b>
+        • WAVE <b id="bw">0</b>
+        • CREDITS <b id="cr">0</b>
     </div>
-  </div>
+</div>
 
-  <script src="a.js"></script>
+
+<div id="panel" class="panel hide">
+    <div class="box">
+        <button id="close" class="x">✕</button>
+        <h2 id="pt"></h2>
+        <div id="pc"></div>
+    </div>
+</div>
+
+
+<div id="game" class="screen hide">
+
+    <canvas id="c" width="1280" height="720"></canvas>
+
+    <div class="hud">
+
+        <div class="top">
+            SCORE <b id="score">0</b>
+            &nbsp; WAVE <b id="wave">1</b>
+            &nbsp; KILLS <b id="kills">0</b>
+            &nbsp; COMBO <b id="combo">0</b>
+        </div>
+
+        <div class="bars">
+
+            HP
+            <div class="bar">
+                <i id="hp"></i>
+            </div>
+
+            SHIELD
+            <div class="bar">
+                <i id="sh"></i>
+            </div>
+
+            ENERGY
+            <div class="bar">
+                <i id="en"></i>
+            </div>
+
+        </div>
+
+        <div class="gun">
+            🔫 <b id="gun">BLASTER</b>
+        </div>
+
+    </div>
+
+
+    <div id="boss" class="boss hide">
+        <b id="bn">VOID CORE</b>
+
+        <div class="bar">
+            <i id="bh"></i>
+        </div>
+    </div>
+
+
+    <div id="minimap">
+        <canvas id="mini" width="180" height="100"></canvas>
+    </div>
+
+
+    <button id="pause" class="pause">Ⅱ</button>
+
+
+    <div id="touch">
+
+        <div id="move" class="stick">
+            <i></i>
+        </div>
+
+        <div id="aim" class="stick">
+            <i></i>
+        </div>
+
+        <button id="fire">FIRE</button>
+
+    </div>
+
+
+    <div id="pauseBox" class="overlay hide">
+
+        <h1>PAUSED</h1>
+
+        <button id="resume" class="big">
+            RESUME
+        </button>
+
+        <button class="big dark" id="m1">
+            MENU
+        </button>
+
+    </div>
+
+
+    <div id="over" class="overlay hide">
+
+        <h1>GAME OVER</h1>
+
+        <p>
+            Score:
+            <b id="final">0</b>
+        </p>
+
+        <button id="again" class="big">
+            OPNIEUW
+        </button>
+
+        <button class="big dark" id="m2">
+            MENU
+        </button>
+
+    </div>
+
+
+    <div id="win" class="overlay hide">
+
+        <h1>VICTORY!</h1>
+
+        <p>Boss verslagen!</p>
+
+        <button id="again2" class="big">
+            NOG EEN KEER
+        </button>
+
+        <button class="big dark" id="m3">
+            MENU
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="a.js"></script>
+
 </body>
 </html>
