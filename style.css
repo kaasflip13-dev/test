@@ -1,263 +1,726 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: #030712;
-  color: white;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #030711;
+    color: #eef8ff;
+
+    font-family: Arial, sans-serif;
+
+    touch-action: none;
 }
 
 button {
-  border: none;
-  cursor: pointer;
-  color: white;
-  font-weight: bold;
+    color: inherit;
+    font: inherit;
+
+    border: 0;
+    cursor: pointer;
 }
 
-.hidden {
-  display: none !important;
+.hide {
+    display: none !important;
 }
 
-/* MENU */
 
-#menu {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(circle at center, #10284a 0%, #050b18 45%, #02040a 100%);
+/* =========================
+   MENU
+========================= */
+
+.screen {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#menu h1 {
-  margin: 0;
-  font-size: clamp(50px, 10vw, 110px);
-  letter-spacing: 8px;
-  color: #4de3ff;
-  text-shadow:
-    0 0 10px #4de3ff,
-    0 0 30px #168cff,
-    0 0 60px #168cff;
+
+.hero {
+    text-align: center;
+
+    padding:
+        7vh
+        12px
+        2vh;
 }
 
-#menu p {
-  color: #8fa9c5;
-  letter-spacing: 5px;
-  margin-bottom: 40px;
+
+.logo {
+    font-size:
+        clamp(44px, 9vw, 95px);
+
+    font-weight: 900;
+
+    letter-spacing: 7px;
+
+    color: #43ddff;
+
+    text-shadow:
+        0 0 15px #43ddff,
+        0 0 35px #208dff;
 }
 
-#startButton,
-#helpButton,
-#restartButton,
-#menuButton,
-#closeHelp {
-  width: 250px;
-  padding: 16px;
-  margin: 7px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #19d8ff, #285cff);
-  font-size: 17px;
-  box-shadow: 0 0 20px #159cff55;
+
+.sub {
+    color: #8da9c8;
+
+    letter-spacing: 3px;
+
+    margin:
+        5px
+        0
+        28px;
+
+    font-size:
+        clamp(10px, 2vw, 17px);
 }
 
-#helpButton,
-#menuButton {
-  background: #111d31;
-  border: 1px solid #36506e;
+
+.big {
+    min-width: 220px;
+
+    margin: 6px;
+
+    padding:
+        14px
+        25px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #19caff,
+            #315dff
+        );
+
+    font-weight: 900;
+
+    box-shadow:
+        0 0 20px #159cff44;
 }
 
-#startButton:hover,
-#helpButton:hover,
-#restartButton:hover,
-#menuButton:hover,
-#closeHelp:hover {
-  transform: scale(1.04);
+
+.big:hover {
+    transform: scale(1.03);
 }
 
-#menuStats {
-  margin-top: 30px;
-  color: #8fa9c5;
+
+.dark {
+    background: #101b2d;
+
+    border:
+        1px solid
+        #38506d;
 }
 
-/* GAME */
+
+/* =========================
+   MENU GRID
+========================= */
+
+.grid {
+    width:
+        min(
+            900px,
+            94vw
+        );
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap: 12px;
+}
+
+
+.grid button {
+    min-height: 70px;
+
+    border-radius: 14px;
+
+    background: #0b1629;
+
+    border:
+        1px solid
+        #29415f;
+
+    font-weight: 800;
+}
+
+
+.grid button:hover {
+    background: #122440;
+
+    border-color: #43ddff;
+}
+
+
+.stats {
+    margin-top: auto;
+
+    padding: 18px;
+
+    color: #91aac4;
+
+    font-size: 13px;
+}
+
+
+.stats b {
+    color: white;
+}
+
+
+/* =========================
+   PANEL
+========================= */
+
+.panel {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 20;
+
+    background:
+        #02050cdd;
+
+    display: grid;
+
+    place-items: center;
+
+    padding: 12px;
+}
+
+
+.box {
+    position: relative;
+
+    width:
+        min(
+            900px,
+            96vw
+        );
+
+    max-height: 90vh;
+
+    overflow: auto;
+
+    background: #081124;
+
+    border:
+        1px solid
+        #34547b;
+
+    border-radius: 18px;
+
+    padding: 25px;
+}
+
+
+.box h2 {
+    text-align: center;
+
+    color: #50ddff;
+}
+
+
+.x {
+    position: absolute;
+
+    right: 12px;
+    top: 10px;
+
+    background: none;
+
+    font-size: 24px;
+}
+
+
+.cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                145px,
+                1fr
+            )
+        );
+
+    gap: 10px;
+}
+
+
+.card {
+    padding: 14px;
+
+    border-radius: 13px;
+
+    background: #0d1a30;
+
+    border:
+        1px solid
+        #29415f;
+
+    text-align: center;
+}
+
+
+.card.sel {
+    border-color: #43ddff;
+
+    box-shadow:
+        0 0 15px
+        #43ddff44;
+}
+
+
+.card.lock {
+    opacity: .45;
+}
+
+
+.card button {
+    margin-top: 8px;
+
+    padding:
+        8px
+        10px;
+
+    border-radius: 8px;
+
+    background: #1d6eff;
+}
+
+
+.preview {
+    width: 64px;
+    height: 64px;
+
+    margin:
+        0
+        auto
+        8px;
+
+    border-radius: 15px;
+}
+
+
+/* =========================
+   GAME
+========================= */
 
 #game {
-  position: relative;
-  width: 100%;
-  height: 100%;
+    position: relative;
 }
 
-#gameCanvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: #030712;
+
+#c {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    background: #030712;
 }
 
-/* HUD */
 
-#hud {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  right: 15px;
+/* =========================
+   HUD
+========================= */
 
-  display: flex;
-  justify-content: center;
-  gap: 30px;
+.hud {
+    position: absolute;
 
-  font-size: 17px;
-  pointer-events: none;
-  text-shadow: 0 0 8px black;
+    inset: 0;
+
+    pointer-events: none;
+
+    padding: 12px;
 }
 
-#hud span {
-  color: #50e2ff;
-  font-weight: bold;
+
+.top {
+    text-align: center;
+
+    font-size: 13px;
+
+    text-shadow:
+        0 0 8px black;
 }
 
-#pauseButton {
-  position: absolute;
-  top: 15px;
-  right: 15px;
 
-  width: 50px;
-  height: 45px;
-
-  border-radius: 10px;
-  background: #101d30dd;
-  border: 1px solid #46627e;
-  font-size: 20px;
+.top b {
+    color: #55ddff;
 }
 
-/* GAME OVER */
 
-#gameOver {
-  position: absolute;
-  inset: 0;
+.bars {
+    position: absolute;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    left: 15px;
+    bottom: 15px;
 
-  background: #02050cee;
+    width:
+        min(
+            260px,
+            30vw
+        );
+
+    font-size: 10px;
 }
 
-#gameOver h1 {
-  font-size: clamp(50px, 10vw, 100px);
-  color: #ff526c;
-  text-shadow: 0 0 30px #ff2344;
+
+.bar {
+    height: 10px;
+
+    background: #142034;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    margin:
+        3px
+        0
+        6px;
 }
 
-/* HELP */
 
-#help {
-  position: fixed;
-  inset: 0;
+.bar i {
+    display: block;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 100%;
+    height: 100%;
 
-  background: #02050cee;
-  z-index: 20;
+    background: #3ce0ff;
 }
 
-.helpBox {
-  width: min(500px, 90%);
-  padding: 30px;
-  border-radius: 20px;
-  background: #091427;
-  border: 1px solid #34577b;
-  text-align: center;
+
+.gun {
+    position: absolute;
+
+    right: 15px;
+    bottom: 15px;
+
+    background:
+        #071526dd;
+
+    padding: 10px;
+
+    border-radius: 9px;
 }
 
-.helpBox h2 {
-  color: #4de3ff;
+
+/* =========================
+   BOSS
+========================= */
+
+.boss {
+    position: absolute;
+
+    top: 45px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width:
+        min(
+            550px,
+            70vw
+        );
+
+    text-align: center;
 }
 
-/* MOBILE */
 
-#mobileControls {
-  display: none;
+.boss .bar {
+    height: 14px;
 }
 
-#joystick {
-  position: absolute;
-  left: 25px;
-  bottom: 25px;
 
-  width: 120px;
-  height: 120px;
-
-  border-radius: 50%;
-  border: 2px solid #ffffff55;
-  background: #ffffff15;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #ffffff88;
-  user-select: none;
+.boss .bar i {
+    background: #ff4260;
 }
 
-#fireButton {
-  position: absolute;
-  right: 25px;
-  bottom: 40px;
 
-  width: 90px;
-  height: 90px;
+/* =========================
+   MINIMAP
+========================= */
 
-  border-radius: 50%;
+#minimap {
+    position: absolute;
 
-  background: #ff405888;
-  border: 2px solid #ff8899;
+    top: 60px;
+    right: 15px;
 
-  user-select: none;
+    width: 180px;
+    height: 100px;
+
+    background: #06101ddd;
+
+    border:
+        1px solid
+        #3b607f;
+
+    border-radius: 8px;
+
+    overflow: hidden;
 }
+
+
+#mini {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* =========================
+   PAUSE
+========================= */
+
+.pause {
+    position: absolute;
+
+    right: 12px;
+    top: 12px;
+
+    padding:
+        9px
+        13px;
+
+    border-radius: 9px;
+
+    background:
+        #0d1b2dcc;
+
+    border:
+        1px solid
+        #48627d;
+}
+
+
+/* =========================
+   OVERLAYS
+========================= */
+
+.overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 10;
+
+    background:
+        #02050cdd;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+.overlay h1 {
+    font-size:
+        clamp(
+            45px,
+            10vw,
+            90px
+        );
+
+    text-shadow:
+        0 0 25px
+        #4bdcff;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+#touch {
+    display: none;
+}
+
+
+.stick {
+    position: absolute;
+
+    width: 120px;
+    height: 120px;
+
+    border-radius: 50%;
+
+    background: #ffffff10;
+
+    border:
+        2px solid
+        #ffffff33;
+}
+
+
+.stick i {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 48px;
+    height: 48px;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    border-radius: 50%;
+
+    background:
+        #4de0ff77;
+
+    border:
+        2px solid
+        #a6eeff;
+}
+
+
+.stick:first-child {
+    left: 20px;
+    bottom: 20px;
+}
+
+
+.stick:nth-child(2) {
+    right: 20px;
+    bottom: 20px;
+}
+
+
+#fire {
+    position: absolute;
+
+    right: 140px;
+    bottom: 40px;
+
+    width: 82px;
+    height: 82px;
+
+    border-radius: 50%;
+
+    background:
+        #ff405877;
+
+    border:
+        2px solid
+        #ff8b99;
+
+    font-weight: 900;
+}
+
 
 @media (hover: none) and (pointer: coarse) {
 
-  #mobileControls {
-    display: block;
-  }
+    #touch {
+        display: block;
+    }
 
-  #hud {
-    font-size: 12px;
-    gap: 10px;
-  }
-
-  #pauseButton {
-    top: 55px;
-  }
 }
 
-@media (max-width: 600px) {
 
-  #menu h1 {
-    font-size: 48px;
-    letter-spacing: 3px;
-  }
+@media (max-width: 800px) {
 
-  #menu p {
-    font-size: 10px;
-    letter-spacing: 2px;
-  }
+    .grid {
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
 
-  #startButton,
-  #helpButton {
-    width: 210px;
-  }
+    .bars {
+        width: 190px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .hero {
+        padding-top: 4vh;
+    }
+
+    .logo {
+        letter-spacing: 3px;
+    }
+
+    .sub {
+        letter-spacing: 1px;
+    }
+
+    .grid button {
+        min-height: 58px;
+
+        font-size: 12px;
+    }
+
+    .stats {
+        font-size: 11px;
+    }
+
+    .bars {
+        width: 145px;
+    }
+
+    .gun {
+        font-size: 11px;
+    }
+
+    .stick {
+        width: 105px;
+        height: 105px;
+    }
+
+    .stick i {
+        width: 43px;
+        height: 43px;
+    }
+
+    #fire {
+        right: 116px;
+        bottom: 28px;
+
+        width: 70px;
+        height: 70px;
+
+        font-size: 11px;
+    }
+
+    #minimap {
+        width: 130px;
+        height: 75px;
+    }
+
 }
