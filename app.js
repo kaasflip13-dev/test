@@ -4251,133 +4251,189 @@ function createSkinsMenu() {
 
 
 /* =========================================================
-   SKINS TEKENEN IN MENU
+   MOOI SKINS MENU
+========================================================= */
+
+function createSkinsMenu() {
+
+  if (document.getElementById("skinsMenu")) {
+    return;
+  }
+
+  const menu = document.createElement("div");
+
+  menu.id = "skinsMenu";
+  menu.className = "subscreen";
+  menu.style.display = "none";
+
+  menu.innerHTML = `
+    <div class="panel">
+
+      <h1>🤖 ROBOT SKINS</h1>
+
+      <div class="credits-box">
+        💰
+        <span id="skinCredits">0</span>
+        CREDITS
+      </div>
+
+      <p>
+        Kies een skin voor je robot.
+      </p>
+
+      <div
+        id="skinList"
+        class="cards-grid"
+      ></div>
+
+      <button
+        id="closeSkins"
+        class="backBtn"
+      >
+        ← TERUG
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(menu);
+
+  document
+    .getElementById("closeSkins")
+    .addEventListener("click", () => {
+
+      menu.style.display = "none";
+
+      showScreen("startScreen");
+
+    });
+
+  renderSkins();
+}
+
+
+/* =========================================================
+   SKINS TEKENEN
 ========================================================= */
 
 function renderSkins() {
 
   const list =
-    document.getElementById(
-      "skinList"
-    );
+    document.getElementById("skinList");
 
   const credits =
-    document.getElementById(
-      "skinCredits"
-    );
-
+    document.getElementById("skinCredits");
 
   if (!list) return;
-
 
   credits.textContent =
     save.credits;
 
-
   list.innerHTML = "";
 
 
-  skinData.forEach(
-    skin => {
+  skinData.forEach(skin => {
 
-      const owned =
-        save.skin.owned.includes(
-          skin.id
-        );
+    const owned =
+      save.skin.owned.includes(
+        skin.id
+      );
 
-      const selected =
-        save.skin.selected ===
-        skin.id;
-
-
-      const card =
-        document.createElement(
-          "div"
-        );
+    const selected =
+      save.skin.selected ===
+      skin.id;
 
 
-      card.style.background =
-        "#081425";
+    const card =
+      document.createElement(
+        "div"
+      );
 
-      card.style.border =
-        "2px solid " +
-        skin.color;
+    /*
+      Gebruik dezelfde .card
+      als je andere menu's
+    */
 
-      card.style.borderRadius =
-        "15px";
-
-      card.style.padding =
-        "20px";
-
-      card.style.boxShadow =
-        "0 0 20px " +
-        skin.color;
+    card.className =
+      "card" +
+      (selected
+        ? " selected"
+        : "");
 
 
-      card.innerHTML = `
+    card.innerHTML = `
 
-        <div
-          style="
-            width:70px;
-            height:70px;
-            margin:auto;
-            border-radius:50%;
-            background:${skin.color};
-            border:6px solid ${skin.accent};
-            box-shadow:
-              0 0 25px ${skin.color};
-          "
-        ></div>
+      <div
+        class="card-icon"
+        style="
+          color:${skin.color};
+          text-shadow:
+            0 0 15px ${skin.color};
+        "
+      >
+        🤖
+      </div>
 
-        <h2>
-          ${skin.name}
-        </h2>
+      <h3>
+        ${skin.name}
+      </h3>
 
-        <p>
-          ${
-            owned
-              ? "✅ ONTGRENDELD"
-              : skin.cost +
+      <div
+        style="
+          width:55px;
+          height:55px;
+          margin:15px auto;
+          border-radius:50%;
+          background:${skin.color};
+          border:4px solid ${skin.accent};
+          box-shadow:
+            0 0 20px ${skin.color};
+        "
+      ></div>
+
+      <p>
+        ${
+          owned
+            ? "ONTGRENDELD"
+            : skin.cost +
+              " CREDITS"
+        }
+      </p>
+
+      <button>
+
+        ${
+          selected
+            ? "✓ GESELECTEERD"
+            : owned
+              ? "GEBRUIKEN"
+              : "KOOP - " +
+                skin.cost +
                 " CREDITS"
-          }
-        </p>
+        }
 
-        <button
-          style="
-            padding:10px 20px;
-            cursor:pointer;
-          "
-        >
-          ${
-            selected
-              ? "✅ GESELECTEERD"
-              : owned
-                ? "GEBRUIKEN"
-                : "KOPEN"
-          }
-        </button>
+      </button>
 
-      `;
+    `;
 
 
-      card
-        .querySelector("button")
-        .addEventListener(
-          "click",
-          () => {
+    card
+      .querySelector("button")
+      .addEventListener(
+        "click",
+        () => {
 
-            buyOrSelectSkin(
-              skin.id
-            );
+          buyOrSelectSkin(
+            skin.id
+          );
 
-          }
-        );
+        }
+      );
 
 
-      list.appendChild(card);
+    list.appendChild(card);
 
-    }
-  );
+  });
 
 }
 
@@ -4396,35 +4452,22 @@ function createSkinsButton() {
     return;
   }
 
-
   const button =
     document.createElement(
       "button"
     );
 
-
   button.id =
     "skinsButton";
 
+  button.className =
+    "menu-card";
 
-  button.textContent =
+  button.dataset.panel =
+    "skinsMenu";
+
+  button.innerHTML =
     "🤖 SKINS";
-
-
-  button.style.padding =
-    "12px 25px";
-
-
-  button.style.margin =
-    "10px";
-
-
-  button.style.fontSize =
-    "18px";
-
-
-  button.style.cursor =
-    "pointer";
 
 
   button.addEventListener(
@@ -4434,29 +4477,22 @@ function createSkinsButton() {
       createSkinsMenu();
 
       document
-        .getElementById(
-          "skinsMenu"
-        )
-        .style.display =
-        "block";
-
-      document
         .querySelectorAll(
           ".screen, .subscreen, .game-screen"
         )
-        .forEach(
-          element => {
+        .forEach(element => {
 
-            if (
-              element.id !==
-              "skinsMenu"
-            ) {
-              element.style.display =
-                "none";
-            }
+          element.style.display =
+            "none";
 
-          }
-        );
+        });
+
+
+      document.getElementById(
+        "skinsMenu"
+      ).style.display =
+        "block";
+
 
       renderSkins();
 
@@ -4479,61 +4515,6 @@ function createSkinsButton() {
   }
 
 }
-
-
-/* =========================================================
-   SKIN AUTOMATISCH OP SPELER HOUDEN
-========================================================= */
-
-setInterval(
-  () => {
-
-    if (state.player) {
-      applyPlayerSkin();
-    }
-
-  },
-  100
-);
-
-
-/* =========================================================
-   PLAYER DRAW AANPASSEN
-========================================================= */
-
-const originalDrawPlayer =
-  drawPlayer;
-
-
-drawPlayer =
-  function () {
-
-    if (
-      state.player
-    ) {
-
-      const skin =
-        getCurrentSkin();
-
-      state.player.skinColor =
-        skin.color;
-
-      state.player.skinAccent =
-        skin.accent;
-
-    }
-
-
-    originalDrawPlayer();
-
-  };
-
-
-/* =========================================================
-   SKINS KNOP STARTEN
-========================================================= */
-
-createSkinsButton();
 
 console.log(
   "✅ SpaceBots skins geladen!"
