@@ -1456,7 +1456,7 @@ function enemyShoot(robot) {
 
     radius: 5,
 
-    life: 300,
+    life: 1100,
 
     color: robot.color
 
