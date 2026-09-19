@@ -3970,3 +3970,251 @@ document.getElementById(
 renderMenu();
 
 showScreen("startScreen");
+
+/* ============================================================
+   SPACEBOTS ULTRA - CREDITS + SKINS
+   ============================================================ */
+
+const SB_SKINS = [
+    {
+        id: "classic",
+        name: "Classic",
+        price: 0,
+        color: "#4cf",
+        accent: "#fff"
+    },
+    {
+        id: "red",
+        name: "Red Comet",
+        price: 500,
+        color: "#f44",
+        accent: "#ffaaaa"
+    },
+    {
+        id: "toxic",
+        name: "Toxic",
+        price: 1000,
+        color: "#4f4",
+        accent: "#dfffdf"
+    },
+    {
+        id: "plasma",
+        name: "Plasma",
+        price: 2000,
+        color: "#b64cff",
+        accent: "#f0d8ff"
+    },
+    {
+        id: "gold",
+        name: "Gold",
+        price: 5000,
+        color: "#ffd43b",
+        accent: "#fff3a6"
+    },
+    {
+        id: "shadow",
+        name: "Shadow",
+        price: 10000,
+        color: "#444",
+        accent: "#aaa"
+    }
+];
+
+const SB_SAVE_KEY = "spacebots_credits_skins";
+
+let SB_STORE = JSON.parse(
+    localStorage.getItem(SB_SAVE_KEY) || "{}"
+);
+
+if (!Array.isArray(SB_STORE.owned)) {
+    SB_STORE.owned = ["classic"];
+}
+
+if (typeof SB_STORE.credits !== "number") {
+    SB_STORE.credits = 0;
+}
+
+if (!SB_STORE.selected) {
+    SB_STORE.selected = "classic";
+}
+
+
+/* OPSLAAN */
+function sbSave() {
+    localStorage.setItem(
+        SB_SAVE_KEY,
+        JSON.stringify(SB_STORE)
+    );
+}
+
+
+/* CREDITS TOEVOEGEN */
+function addCredits(amount) {
+
+    amount = Math.floor(amount);
+
+    if (amount <= 0) return;
+
+    SB_STORE.credits += amount;
+
+    sbSave();
+
+    updateCreditsUI();
+
+    console.log(
+        "+" + amount + " credits"
+    );
+}
+
+
+/* CREDIT WEERGAVE */
+function updateCreditsUI() {
+
+    document
+        .querySelectorAll("[data-credits]")
+        .forEach(el => {
+
+            el.textContent =
+                SB_STORE.credits;
+        });
+}
+
+
+/* SKIN OPHALEN */
+function getSkin(id) {
+
+    return SB_SKINS.find(
+        skin => skin.id === id
+    );
+}
+
+
+/* SKIN KOPEN */
+function buySkin(id) {
+
+    const skin = getSkin(id);
+
+    if (!skin) return;
+
+    /* Al gekocht */
+    if (SB_STORE.owned.includes(id)) {
+
+        SB_STORE.selected = id;
+
+        sbSave();
+
+        updateCreditsUI();
+
+        return;
+    }
+
+
+    /* Te weinig credits */
+    if (SB_STORE.credits < skin.price) {
+
+        alert(
+            "Je hebt niet genoeg credits!"
+        );
+
+        return;
+    }
+
+
+    /* Betalen */
+    SB_STORE.credits -= skin.price;
+
+
+    /* Skin toevoegen */
+    SB_STORE.owned.push(id);
+
+
+    /* Meteen selecteren */
+    SB_STORE.selected = id;
+
+
+    sbSave();
+
+    updateCreditsUI();
+
+
+    alert(
+        skin.name + " gekocht!"
+    );
+}
+
+
+/* SKIN KIEZEN */
+function selectSkin(id) {
+
+    if (!SB_STORE.owned.includes(id)) {
+        return;
+    }
+
+    SB_STORE.selected = id;
+
+    sbSave();
+
+    updateCreditsUI();
+}
+
+
+/* HUIDIGE SKIN */
+function getCurrentSkin() {
+
+    return getSkin(
+        SB_STORE.selected
+    );
+}
+
+
+/* REWARDS */
+function rewardBotKill() {
+
+    addCredits(10);
+}
+
+
+function rewardWave() {
+
+    addCredits(100);
+}
+
+
+function rewardBoss() {
+
+    addCredits(500);
+}
+
+
+/* GLOBAAL BESCHIKBAAR */
+window.SpaceBotsSkins = {
+
+    skins: SB_SKINS,
+
+    get credits() {
+        return SB_STORE.credits;
+    },
+
+    get selected() {
+        return SB_STORE.selected;
+    },
+
+    get owned() {
+        return SB_STORE.owned;
+    },
+
+    buy: buySkin,
+
+    select: selectSkin,
+
+    current: getCurrentSkin,
+
+    addCredits: addCredits
+};
+
+
+/* START */
+window.addEventListener(
+    "load",
+    updateCreditsUI
+);
