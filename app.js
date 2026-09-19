@@ -3971,250 +3971,570 @@ renderMenu();
 
 showScreen("startScreen");
 
-/* ============================================================
-   SPACEBOTS ULTRA - CREDITS + SKINS
-   ============================================================ */
+/* =========================================================
+   SPACEBOTS ULTRA - SKINS + CREDITS
+========================================================= */
 
-const SB_SKINS = [
-    {
-        id: "classic",
-        name: "Classic",
-        price: 0,
-        color: "#4cf",
-        accent: "#fff"
-    },
-    {
-        id: "red",
-        name: "Red Comet",
-        price: 500,
-        color: "#f44",
-        accent: "#ffaaaa"
-    },
-    {
-        id: "toxic",
-        name: "Toxic",
-        price: 1000,
-        color: "#4f4",
-        accent: "#dfffdf"
-    },
-    {
-        id: "plasma",
-        name: "Plasma",
-        price: 2000,
-        color: "#b64cff",
-        accent: "#f0d8ff"
-    },
-    {
-        id: "gold",
-        name: "Gold",
-        price: 5000,
-        color: "#ffd43b",
-        accent: "#fff3a6"
-    },
-    {
-        id: "shadow",
-        name: "Shadow",
-        price: 10000,
-        color: "#444",
-        accent: "#aaa"
-    }
+const skinData = [
+  {
+    id: "classic",
+    name: "CLASSIC",
+    cost: 0,
+    color: "#36d9ff",
+    accent: "#dffaff"
+  },
+  {
+    id: "red",
+    name: "RED COMET",
+    cost: 500,
+    color: "#ff4268",
+    accent: "#ffd1da"
+  },
+  {
+    id: "toxic",
+    name: "TOXIC",
+    cost: 1000,
+    color: "#39ff9a",
+    accent: "#d7ffe9"
+  },
+  {
+    id: "plasma",
+    name: "PLASMA",
+    cost: 2000,
+    color: "#a855ff",
+    accent: "#f0ddff"
+  },
+  {
+    id: "gold",
+    name: "GOLD",
+    cost: 5000,
+    color: "#ffcc33",
+    accent: "#fff1a8"
+  },
+  {
+    id: "shadow",
+    name: "SHADOW",
+    cost: 10000,
+    color: "#64748b",
+    accent: "#e2e8f0"
+  }
 ];
 
-const SB_SAVE_KEY = "spacebots_credits_skins";
 
-let SB_STORE = JSON.parse(
-    localStorage.getItem(SB_SAVE_KEY) || "{}"
-);
+/* =========================================================
+   SKIN SAVE
+========================================================= */
 
-if (!Array.isArray(SB_STORE.owned)) {
-    SB_STORE.owned = ["classic"];
+if (!save.skin) {
+  save.skin = {
+    selected: "classic",
+    owned: ["classic"]
+  };
 }
 
-if (typeof SB_STORE.credits !== "number") {
-    SB_STORE.credits = 0;
+if (!Array.isArray(save.skin.owned)) {
+  save.skin.owned = ["classic"];
 }
 
-if (!SB_STORE.selected) {
-    SB_STORE.selected = "classic";
+if (!save.skin.owned.includes("classic")) {
+  save.skin.owned.push("classic");
 }
 
-
-/* OPSLAAN */
-function sbSave() {
-    localStorage.setItem(
-        SB_SAVE_KEY,
-        JSON.stringify(SB_STORE)
-    );
+if (!save.skin.selected) {
+  save.skin.selected = "classic";
 }
 
-
-/* CREDITS TOEVOEGEN */
-function addCredits(amount) {
-
-    amount = Math.floor(amount);
-
-    if (amount <= 0) return;
-
-    SB_STORE.credits += amount;
-
-    sbSave();
-
-    updateCreditsUI();
-
-    console.log(
-        "+" + amount + " credits"
-    );
-}
+saveGame();
 
 
-/* CREDIT WEERGAVE */
-function updateCreditsUI() {
+/* =========================================================
+   HUIDIGE SKIN
+========================================================= */
 
-    document
-        .querySelectorAll("[data-credits]")
-        .forEach(el => {
-
-            el.textContent =
-                SB_STORE.credits;
-        });
-}
-
-
-/* SKIN OPHALEN */
-function getSkin(id) {
-
-    return SB_SKINS.find(
-        skin => skin.id === id
-    );
-}
-
-
-/* SKIN KOPEN */
-function buySkin(id) {
-
-    const skin = getSkin(id);
-
-    if (!skin) return;
-
-    /* Al gekocht */
-    if (SB_STORE.owned.includes(id)) {
-
-        SB_STORE.selected = id;
-
-        sbSave();
-
-        updateCreditsUI();
-
-        return;
-    }
-
-
-    /* Te weinig credits */
-    if (SB_STORE.credits < skin.price) {
-
-        alert(
-            "Je hebt niet genoeg credits!"
-        );
-
-        return;
-    }
-
-
-    /* Betalen */
-    SB_STORE.credits -= skin.price;
-
-
-    /* Skin toevoegen */
-    SB_STORE.owned.push(id);
-
-
-    /* Meteen selecteren */
-    SB_STORE.selected = id;
-
-
-    sbSave();
-
-    updateCreditsUI();
-
-
-    alert(
-        skin.name + " gekocht!"
-    );
-}
-
-
-/* SKIN KIEZEN */
-function selectSkin(id) {
-
-    if (!SB_STORE.owned.includes(id)) {
-        return;
-    }
-
-    SB_STORE.selected = id;
-
-    sbSave();
-
-    updateCreditsUI();
-}
-
-
-/* HUIDIGE SKIN */
 function getCurrentSkin() {
 
-    return getSkin(
-        SB_STORE.selected
+  return (
+    skinData.find(
+      skin => skin.id === save.skin.selected
+    ) ||
+    skinData[0]
+  );
+
+}
+
+
+/* =========================================================
+   SKIN OP SPELER ZETTEN
+========================================================= */
+
+function applyPlayerSkin() {
+
+  if (!state.player) return;
+
+  const skin = getCurrentSkin();
+
+  state.player.skinColor = skin.color;
+  state.player.skinAccent = skin.accent;
+
+}
+
+
+/* =========================================================
+   SKIN KOPEN / SELECTEREN
+========================================================= */
+
+function buyOrSelectSkin(id) {
+
+  const skin =
+    skinData.find(
+      s => s.id === id
     );
+
+  if (!skin) return;
+
+
+  /* AL IN BEZIT */
+
+  if (save.skin.owned.includes(id)) {
+
+    save.skin.selected = id;
+
+    applyPlayerSkin();
+
+    saveGame();
+
+    renderSkins();
+
+    return;
+
+  }
+
+
+  /* NIET GENOEG CREDITS */
+
+  if (save.credits < skin.cost) {
+
+    alert(
+      "Je hebt niet genoeg credits!"
+    );
+
+    return;
+
+  }
+
+
+  /* KOPEN */
+
+  save.credits -= skin.cost;
+
+  save.skin.owned.push(id);
+
+  save.skin.selected = id;
+
+  applyPlayerSkin();
+
+  saveGame();
+
+  renderSkins();
+
 }
 
 
-/* REWARDS */
-function rewardBotKill() {
+/* =========================================================
+   SKINS MENU
+========================================================= */
 
-    addCredits(10);
+function createSkinsMenu() {
+
+  if (
+    document.getElementById(
+      "skinsMenu"
+    )
+  ) {
+    return;
+  }
+
+
+  const menu =
+    document.createElement("div");
+
+  menu.id = "skinsMenu";
+
+
+  menu.style.position = "fixed";
+  menu.style.inset = "0";
+  menu.style.zIndex = "99999";
+  menu.style.background = "#030a18";
+  menu.style.color = "white";
+  menu.style.padding = "30px";
+  menu.style.overflow = "auto";
+  menu.style.display = "none";
+  menu.style.fontFamily = "Arial";
+
+
+  menu.innerHTML = `
+
+    <div
+      style="
+        max-width:1000px;
+        margin:auto;
+        text-align:center;
+      "
+    >
+
+      <h1>
+        🤖 ROBOT SKINS
+      </h1>
+
+      <h2>
+        💰
+        <span id="skinCredits">
+          0
+        </span>
+        CREDITS
+      </h2>
+
+      <div
+        id="skinList"
+        style="
+          display:grid;
+          grid-template-columns:
+            repeat(
+              auto-fit,
+              minmax(180px,1fr)
+            );
+          gap:20px;
+          margin-top:30px;
+        "
+      ></div>
+
+      <button
+        id="closeSkins"
+        style="
+          margin-top:30px;
+          padding:14px 30px;
+          font-size:18px;
+          cursor:pointer;
+        "
+      >
+        ← TERUG
+      </button>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(menu);
+
+
+  document
+    .getElementById("closeSkins")
+    .addEventListener(
+      "click",
+      () => {
+
+        menu.style.display =
+          "none";
+
+        showScreen(
+          "startScreen"
+        );
+
+      }
+    );
+
+
+  renderSkins();
+
 }
 
 
-function rewardWave() {
+/* =========================================================
+   SKINS TEKENEN IN MENU
+========================================================= */
 
-    addCredits(100);
+function renderSkins() {
+
+  const list =
+    document.getElementById(
+      "skinList"
+    );
+
+  const credits =
+    document.getElementById(
+      "skinCredits"
+    );
+
+
+  if (!list) return;
+
+
+  credits.textContent =
+    save.credits;
+
+
+  list.innerHTML = "";
+
+
+  skinData.forEach(
+    skin => {
+
+      const owned =
+        save.skin.owned.includes(
+          skin.id
+        );
+
+      const selected =
+        save.skin.selected ===
+        skin.id;
+
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+
+      card.style.background =
+        "#081425";
+
+      card.style.border =
+        "2px solid " +
+        skin.color;
+
+      card.style.borderRadius =
+        "15px";
+
+      card.style.padding =
+        "20px";
+
+      card.style.boxShadow =
+        "0 0 20px " +
+        skin.color;
+
+
+      card.innerHTML = `
+
+        <div
+          style="
+            width:70px;
+            height:70px;
+            margin:auto;
+            border-radius:50%;
+            background:${skin.color};
+            border:6px solid ${skin.accent};
+            box-shadow:
+              0 0 25px ${skin.color};
+          "
+        ></div>
+
+        <h2>
+          ${skin.name}
+        </h2>
+
+        <p>
+          ${
+            owned
+              ? "✅ ONTGRENDELD"
+              : skin.cost +
+                " CREDITS"
+          }
+        </p>
+
+        <button
+          style="
+            padding:10px 20px;
+            cursor:pointer;
+          "
+        >
+          ${
+            selected
+              ? "✅ GESELECTEERD"
+              : owned
+                ? "GEBRUIKEN"
+                : "KOPEN"
+          }
+        </button>
+
+      `;
+
+
+      card
+        .querySelector("button")
+        .addEventListener(
+          "click",
+          () => {
+
+            buyOrSelectSkin(
+              skin.id
+            );
+
+          }
+        );
+
+
+      list.appendChild(card);
+
+    }
+  );
+
 }
 
 
-function rewardBoss() {
+/* =========================================================
+   SKINS KNOP
+========================================================= */
 
-    addCredits(500);
+function createSkinsButton() {
+
+  if (
+    document.getElementById(
+      "skinsButton"
+    )
+  ) {
+    return;
+  }
+
+
+  const button =
+    document.createElement(
+      "button"
+    );
+
+
+  button.id =
+    "skinsButton";
+
+
+  button.textContent =
+    "🤖 SKINS";
+
+
+  button.style.padding =
+    "12px 25px";
+
+
+  button.style.margin =
+    "10px";
+
+
+  button.style.fontSize =
+    "18px";
+
+
+  button.style.cursor =
+    "pointer";
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      createSkinsMenu();
+
+      document
+        .getElementById(
+          "skinsMenu"
+        )
+        .style.display =
+        "block";
+
+      document
+        .querySelectorAll(
+          ".screen, .subscreen, .game-screen"
+        )
+        .forEach(
+          element => {
+
+            if (
+              element.id !==
+              "skinsMenu"
+            ) {
+              element.style.display =
+                "none";
+            }
+
+          }
+        );
+
+      renderSkins();
+
+    }
+  );
+
+
+  const startScreen =
+    document.getElementById(
+      "startScreen"
+    );
+
+
+  if (startScreen) {
+
+    startScreen.appendChild(
+      button
+    );
+
+  }
+
 }
 
 
-/* GLOBAAL BESCHIKBAAR */
-window.SpaceBotsSkins = {
+/* =========================================================
+   SKIN AUTOMATISCH OP SPELER HOUDEN
+========================================================= */
 
-    skins: SB_SKINS,
+setInterval(
+  () => {
 
-    get credits() {
-        return SB_STORE.credits;
-    },
+    if (state.player) {
+      applyPlayerSkin();
+    }
 
-    get selected() {
-        return SB_STORE.selected;
-    },
-
-    get owned() {
-        return SB_STORE.owned;
-    },
-
-    buy: buySkin,
-
-    select: selectSkin,
-
-    current: getCurrentSkin,
-
-    addCredits: addCredits
-};
+  },
+  100
+);
 
 
-/* START */
-window.addEventListener(
-    "load",
-    updateCreditsUI
+/* =========================================================
+   PLAYER DRAW AANPASSEN
+========================================================= */
+
+const originalDrawPlayer =
+  drawPlayer;
+
+
+drawPlayer =
+  function () {
+
+    if (
+      state.player
+    ) {
+
+      const skin =
+        getCurrentSkin();
+
+      state.player.skinColor =
+        skin.color;
+
+      state.player.skinAccent =
+        skin.accent;
+
+    }
+
+
+    originalDrawPlayer();
+
+  };
+
+
+/* =========================================================
+   SKINS KNOP STARTEN
+========================================================= */
+
+createSkinsButton();
+
+console.log(
+  "✅ SpaceBots skins geladen!"
 );
