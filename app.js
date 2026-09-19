@@ -2187,7 +2187,7 @@ function update(dt) {
 
     if (
       robot.shootCd <= 0 &&
-      distance < 700
+      distance < 2199
     ) {
 
       enemyShoot(robot);
