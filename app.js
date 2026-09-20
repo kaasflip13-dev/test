@@ -3972,343 +3972,126 @@ renderMenu();
 showScreen("startScreen");
 
 /* =========================================================
-   SPACEBOTS ULTRA
-   NIEUW SKINS SYSTEEM
+   SKINS
 ========================================================= */
 
-(function () {
+const skinData = [
+  {
+    id: "classic",
+    name: "CLASSIC",
+    cost: 0,
+    color: "#36d9ff",
+    accent: "#dffaff"
+  },
 
-  "use strict";
+  {
+    id: "red",
+    name: "RED COMET",
+    cost: 500,
+    color: "#ff4268",
+    accent: "#ffd1da"
+  },
 
+  {
+    id: "toxic",
+    name: "TOXIC",
+    cost: 1000,
+    color: "#39ff9a",
+    accent: "#d7ffe9"
+  },
 
-  /* =======================================================
-     SKINS
-  ======================================================= */
+  {
+    id: "plasma",
+    name: "PLASMA",
+    cost: 2000,
+    color: "#a855ff",
+    accent: "#f0ddff"
+  },
 
-  const SB_SKINS = [
+  {
+    id: "gold",
+    name: "GOLD",
+    cost: 5000,
+    color: "#ffcc33",
+    accent: "#fff1a8"
+  },
 
-    {
-      id: "classic",
-      name: "CLASSIC",
-      price: 0,
-      color: "#36d9ff",
-      accent: "#dffaff"
-    },
-
-    {
-      id: "red",
-      name: "RED COMET",
-      price: 500,
-      color: "#ff4268",
-      accent: "#ffd1da"
-    },
-
-    {
-      id: "toxic",
-      name: "TOXIC",
-      price: 1000,
-      color: "#39ff9a",
-      accent: "#d7ffe9"
-    },
-
-    {
-      id: "plasma",
-      name: "PLASMA",
-      price: 2000,
-      color: "#a855ff",
-      accent: "#f0ddff"
-    },
-
-    {
-      id: "gold",
-      name: "GOLD",
-      price: 5000,
-      color: "#ffcc33",
-      accent: "#fff1a8"
-    },
-
-    {
-      id: "shadow",
-      name: "SHADOW",
-      price: 10000,
-      color: "#64748b",
-      accent: "#e2e8f0"
-    }
-
-  ];
-
-
-  /* =======================================================
-     SAVE
-  ======================================================= */
-
-  if (!save.skin) {
-
-    save.skin = {
-
-      selected: "classic",
-
-      owned: [
-        "classic"
-      ]
-
-    };
-
+  {
+    id: "shadow",
+    name: "SHADOW",
+    cost: 10000,
+    color: "#64748b",
+    accent: "#e2e8f0"
   }
+];
 
 
-  if (!Array.isArray(save.skin.owned)) {
+function currentSkin() {
 
-    save.skin.owned = [
-      "classic"
-    ];
+  return (
+    skinData.find(
+      s => s.id === save.skin.selected
+    ) || skinData[0]
+  );
 
-  }
+}
 
 
-  if (!save.skin.owned.includes("classic")) {
-
-    save.skin.owned.unshift(
-      "classic"
-    );
-
-  }
-
+function createSkinShop() {
 
   if (
-    !SB_SKINS.some(
-      skin =>
-        skin.id ===
-        save.skin.selected
+    document.getElementById(
+      "skinShop"
     )
   ) {
-
-    save.skin.selected =
-      "classic";
-
+    return;
   }
-
-
-  saveGame();
-
-
-  /* =======================================================
-     HUIDIGE SKIN
-  ======================================================= */
-
-  function sbCurrentSkin() {
-
-    return (
-      SB_SKINS.find(
-        skin =>
-          skin.id ===
-          save.skin.selected
-      ) ||
-      SB_SKINS[0]
-    );
-
-  }
-
-
-  /* =======================================================
-     SKIN OP SPELER
-  ======================================================= */
-
-  function sbApplySkin() {
-
-    if (!state.player) {
-      return;
-    }
-
-    const skin =
-      sbCurrentSkin();
-
-    state.player.skinColor =
-      skin.color;
-
-    state.player.skinAccent =
-      skin.accent;
-
-  }
-
-
-  /* =======================================================
-     KOPEN / SELECTEREN
-  ======================================================= */
-
-  function sbBuySkin(id) {
-
-    const skin =
-      SB_SKINS.find(
-        item =>
-          item.id === id
-      );
-
-    if (!skin) {
-      return;
-    }
-
-
-    /* AL GEKOCHT */
-
-    if (
-      save.skin.owned.includes(
-        id
-      )
-    ) {
-
-      save.skin.selected =
-        id;
-
-      sbApplySkin();
-
-      saveGame();
-
-      sbRenderShop();
-
-      return;
-
-    }
-
-
-    /* TE WEINIG CREDITS */
-
-    if (
-      save.credits <
-      skin.price
-    ) {
-
-      alert(
-        "Niet genoeg credits!"
-      );
-
-      return;
-
-    }
-
-
-    /* KOPEN */
-
-    save.credits -=
-      skin.price;
-
-    save.skin.owned.push(
-      id
-    );
-
-    save.skin.selected =
-      id;
-
-    sbApplySkin();
-
-    saveGame();
-
-    sbRenderShop();
-
-  }
-
-
-  /* =======================================================
-     STYLE
-  ======================================================= */
 
   const style =
     document.createElement(
       "style"
     );
 
-  style.id =
-    "spacebotsSkinStyle";
-
   style.textContent = `
 
-    #spacebotsSkinMenu {
-
+    #skinShop {
       position: fixed;
-
       inset: 0;
-
-      z-index: 999999;
-
+      z-index: 9999;
       display: none;
-
-      overflow-y: auto;
-
-      padding: 30px;
-
+      overflow: auto;
+      padding: 30px 20px;
       box-sizing: border-box;
-
       background:
-        radial-gradient(
-          circle at top,
-          #0b2238 0%,
-          #030a18 55%,
-          #020611 100%
+        linear-gradient(
+          180deg,
+          #06111f,
+          #020611
         );
-
       color: white;
-
       font-family: Arial, sans-serif;
-
     }
 
-
-    #spacebotsSkinInner {
-
-      width: min(
-        1100px,
-        100%
-      );
-
-      margin: auto;
-
-    }
-
-
-    #spacebotsSkinTitle {
-
+    #skinShop .skinHead {
+      max-width: 1100px;
+      margin: 0 auto 25px;
       text-align: center;
+    }
 
-      font-size: 36px;
-
-      margin:
-        10px 0 5px;
-
+    #skinShop h1 {
       color: #36d9ff;
-
       text-shadow:
-        0 0 15px
-        rgba(54,217,255,.8);
-
+        0 0 18px
+        rgba(54,217,255,.65);
     }
 
-
-    #spacebotsSkinSubtitle {
-
-      text-align: center;
-
-      opacity: .7;
-
-      margin-bottom: 20px;
-
-    }
-
-
-    #spacebotsCredits {
-
-      width: fit-content;
-
-      margin:
-        0 auto 30px;
-
-      padding:
-        10px 22px;
-
+    #skinCreditsBox {
+      display: inline-block;
+      padding: 10px 18px;
       border:
         1px solid #36d9ff;
-
       border-radius: 10px;
-
+      color: #36d9ff;
       background:
         rgba(
           54,
@@ -4316,29 +4099,13 @@ showScreen("startScreen");
           255,
           .08
         );
-
-      color: #36d9ff;
-
-      font-size: 20px;
-
       font-weight: bold;
-
-      box-shadow:
-        0 0 20px
-        rgba(
-          54,
-          217,
-          255,
-          .2
-        );
-
     }
 
-
-    #spacebotsSkinGrid {
-
+    #skinCards {
+      max-width: 1100px;
+      margin: auto;
       display: grid;
-
       grid-template-columns:
         repeat(
           auto-fit,
@@ -4347,22 +4114,12 @@ showScreen("startScreen");
             1fr
           )
         );
-
       gap: 18px;
-
     }
 
-
-    .spacebotSkinCard {
-
-      position: relative;
-
-      padding: 22px;
-
-      min-height: 245px;
-
+    .skinCard {
+      padding: 20px;
       text-align: center;
-
       border:
         1px solid
         rgba(
@@ -4371,226 +4128,68 @@ showScreen("startScreen");
           255,
           .25
         );
-
       border-radius: 14px;
-
       background:
-        linear-gradient(
-          145deg,
-          rgba(
-            16,
-            34,
-            55,
-            .95
-          ),
-          rgba(
-            5,
-            12,
-            25,
-            .95
-          )
-        );
-
-      box-shadow:
-        0 0 18px
         rgba(
-          0,
-          0,
-          0,
-          .35
+          8,
+          20,
+          37,
+          .95
         );
-
-      transition:
-        transform .2s,
-        box-shadow .2s,
-        border-color .2s;
-
+      transition: .2s;
     }
 
-
-    .spacebotSkinCard:hover {
-
+    .skinCard:hover {
       transform:
-        translateY(-5px);
-
+        translateY(-4px);
       box-shadow:
-        0 0 25px
-        rgba(
-          54,
-          217,
-          255,
-          .22
-        );
-
-    }
-
-
-    .spacebotSkinCard.selected {
-
-      border-color:
-        #36d9ff;
-
-      box-shadow:
-        0 0 25px
-        rgba(
-          54,
-          217,
-          255,
-          .4
-        );
-
-    }
-
-
-    .spacebotSkinRobot {
-
-      width: 72px;
-
-      height: 72px;
-
-      margin:
-        5px auto 15px;
-
-      clip-path:
-        polygon(
-          100% 50%,
-          25% 0%,
-          38% 50%,
-          25% 100%
-        );
-
-      border:
-        5px solid white;
-
-      box-shadow:
-        0 0 25px currentColor;
-
-    }
-
-
-    .spacebotSkinCard h2 {
-
-      margin:
-        5px 0 10px;
-
-      font-size: 20px;
-
-    }
-
-
-    .spacebotSkinPrice {
-
-      opacity: .7;
-
-      margin-bottom: 15px;
-
-    }
-
-
-    .spacebotSkinButton {
-
-      width: 100%;
-
-      padding:
-        11px 14px;
-
-      border:
-        1px solid #36d9ff;
-
-      border-radius: 8px;
-
-      background:
-        rgba(
-          54,
-          217,
-          255,
-          .08
-        );
-
-      color: white;
-
-      font-weight: bold;
-
-      cursor: pointer;
-
-      transition:
-        background .2s,
-        box-shadow .2s;
-
-    }
-
-
-    .spacebotSkinButton:hover {
-
-      background:
+        0 0 20px
         rgba(
           54,
           217,
           255,
           .2
         );
-
-      box-shadow:
-        0 0 15px
-        rgba(
-          54,
-          217,
-          255,
-          .25
-        );
-
     }
 
-
-    .spacebotSkinBack {
-
-      display: block;
-
-      margin:
-        30px auto 0;
-
-      padding:
-        12px 30px;
-
-      border:
-        1px solid
+    .skinCard.selected {
+      border-color:
         #36d9ff;
-
-      border-radius: 8px;
-
-      background:
+      box-shadow:
+        0 0 22px
         rgba(
           54,
           217,
           255,
-          .08
+          .38
         );
-
-      color: white;
-
-      font-weight: bold;
-
-      cursor: pointer;
-
     }
 
+    .skinPreview {
+      width: 62px;
+      height: 62px;
+      margin:
+        0 auto 14px;
+      border-radius: 50%;
+      box-shadow:
+        0 0 22px
+        currentColor;
+    }
 
-    @media (
-      max-width: 600px
-    ) {
+    .skinCard button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      cursor: pointer;
+    }
 
-      #spacebotsSkinTitle {
-
-        font-size: 27px;
-
-      }
-
-      #spacebotsSkinMenu {
-
-        padding: 18px;
-
-      }
-
+    #skinBackBtn {
+      display: block;
+      margin:
+        28px auto 0;
+      padding:
+        11px 26px;
+      cursor: pointer;
     }
 
   `;
@@ -4599,511 +4198,57 @@ showScreen("startScreen");
     style
   );
 
-
-  /* =======================================================
-     MENU MAKEN
-  ======================================================= */
-
-  const menu =
+  const shop =
     document.createElement(
       "div"
     );
 
-  menu.id =
-    "spacebotsSkinMenu";
+  shop.id =
+    "skinShop";
 
+  shop.innerHTML = `
 
-  menu.innerHTML = `
+    <div class="skinHead">
 
-    <div id="spacebotsSkinInner">
-
-      <h1 id="spacebotsSkinTitle">
+      <h1>
         🤖 ROBOT SKINS
       </h1>
 
-      <div id="spacebotsSkinSubtitle">
+      <p>
+        Kies een nieuwe stijl
+        voor je robot.
+      </p>
 
-        Geef je robot een nieuwe look.
-
-      </div>
-
-
-      <div id="spacebotsCredits">
-
+      <div
+        id="skinCreditsBox"
+      >
         💰
-        <span id="spacebotsCreditsValue">
+        <span
+          id="skinCreditsValue"
+        >
           0
         </span>
         CREDITS
-
       </div>
-
-
-      <div id="spacebotsSkinGrid"></div>
-
-
-      <button
-        id="spacebotsSkinBack"
-        class="spacebotSkinBack"
-      >
-
-        ← TERUG
-
-      </button>
 
     </div>
 
+    <div
+      id="skinCards"
+    ></div>
+
+    <button
+      id="skinBackBtn"
+      class="backBtn"
+      type="button"
+    >
+      ← TERUG
+    </button>
+
   `;
 
-
   document.body.appendChild(
-    menu
+    shop
   );
 
-
-  /* =======================================================
-     SHOP TEKENEN
-  ======================================================= */
-
-  function sbRenderShop() {
-
-    const grid =
-      document.getElementById(
-        "spacebotsSkinGrid"
-      );
-
-    const credits =
-      document.getElementById(
-        "spacebotsCreditsValue"
-      );
-
-
-    if (!grid) {
-      return;
-    }
-
-
-    credits.textContent =
-      save.credits;
-
-
-    grid.innerHTML = "";
-
-
-    SB_SKINS.forEach(
-      skin => {
-
-        const owned =
-          save.skin.owned.includes(
-            skin.id
-          );
-
-        const selected =
-          save.skin.selected ===
-          skin.id;
-
-
-        const card =
-          document.createElement(
-            "div"
-          );
-
-        card.className =
-          "spacebotSkinCard";
-
-
-        if (selected) {
-
-          card.classList.add(
-            "selected"
-          );
-
-        }
-
-
-        let buttonText;
-
-
-        if (selected) {
-
-          buttonText =
-            "✓ GESELECTEERD";
-
-        } else if (owned) {
-
-          buttonText =
-            "GEBRUIKEN";
-
-        } else {
-
-          buttonText =
-            "KOOP - " +
-            skin.price +
-            " CREDITS";
-
-        }
-
-
-        card.innerHTML = `
-
-          <div
-            class="spacebotSkinRobot"
-            style="
-              color:${skin.color};
-              background:${skin.color};
-              border-color:${skin.accent};
-            "
-          ></div>
-
-
-          <h2>
-            ${skin.name}
-          </h2>
-
-
-          <div
-            class="spacebotSkinPrice"
-          >
-
-            ${
-              owned
-                ? "✅ ONTGRENDELD"
-                : "💰 " +
-                  skin.price +
-                  " credits"
-            }
-
-          </div>
-
-
-          <button
-            class="spacebotSkinButton"
-          >
-
-            ${buttonText}
-
-          </button>
-
-        `;
-
-
-        card
-          .querySelector(
-            ".spacebotSkinButton"
-          )
-          .addEventListener(
-            "click",
-            () => {
-
-              sbBuySkin(
-                skin.id
-              );
-
-            }
-          );
-
-
-        grid.appendChild(
-          card
-        );
-
-      }
-    );
-
-  }
-
-
-  /* =======================================================
-     TERUG
-  ======================================================= */
-
-  document
-    .getElementById(
-      "spacebotsSkinBack"
-    )
-    .addEventListener(
-      "click",
-      () => {
-
-        menu.style.display =
-          "none";
-
-        showScreen(
-          "startScreen"
-        );
-
-      }
-    );
-
-
-  /* =======================================================
-     SKINS KNOP
-  ======================================================= */
-
-  const skinsButton =
-    document.createElement(
-      "button"
-    );
-
-  skinsButton.id =
-    "spacebotsSkinsButton";
-
-  skinsButton.type =
-    "button";
-
-  skinsButton.textContent =
-    "🤖 SKINS";
-
-
-  skinsButton.style.padding =
-    "13px 25px";
-
-  skinsButton.style.margin =
-    "10px";
-
-  skinsButton.style.border =
-    "1px solid #36d9ff";
-
-  skinsButton.style.borderRadius =
-    "8px";
-
-  skinsButton.style.background =
-    "rgba(54,217,255,.08)";
-
-  skinsButton.style.color =
-    "white";
-
-  skinsButton.style.fontSize =
-    "17px";
-
-  skinsButton.style.fontWeight =
-    "bold";
-
-  skinsButton.style.cursor =
-    "pointer";
-
-
-  skinsButton.addEventListener(
-    "mouseenter",
-    () => {
-
-      skinsButton.style.background =
-        "rgba(54,217,255,.2)";
-
-      skinsButton.style.boxShadow =
-        "0 0 15px rgba(54,217,255,.3)";
-
-    }
-  );
-
-
-  skinsButton.addEventListener(
-    "mouseleave",
-    () => {
-
-      skinsButton.style.background =
-        "rgba(54,217,255,.08)";
-
-      skinsButton.style.boxShadow =
-        "none";
-
-    }
-  );
-
-
-  skinsButton.addEventListener(
-    "click",
-    () => {
-
-      menu.style.display =
-        "block";
-
-      renderSkins();
-
-    }
-  );
-
-
-  const startScreen =
-    document.getElementById(
-      "startScreen"
-    );
-
-
-  if (startScreen) {
-
-    startScreen.appendChild(
-      skinsButton
-    );
-
-  }
-
-
-  /* =======================================================
-     SPELER SKIN
-  ======================================================= */
-
-  function renderSkins() {
-
-    sbApplySkin();
-
-    sbRenderShop();
-
-  }
-
-
-  /*
-     We tekenen een nieuwe gekleurde
-     laag over je bestaande robot.
-  */
-
-  const oldDrawPlayer =
-    drawPlayer;
-
-
-  drawPlayer =
-    function () {
-
-      oldDrawPlayer();
-
-
-      if (!state.player) {
-        return;
-      }
-
-
-      const player =
-        state.player;
-
-      const skin =
-        sbCurrentSkin();
-
-
-      ctx.save();
-
-
-      ctx.translate(
-        player.x,
-        player.y
-      );
-
-
-      ctx.rotate(
-        player.angle
-      );
-
-
-      ctx.shadowBlur =
-        25;
-
-      ctx.shadowColor =
-        skin.color;
-
-
-      ctx.fillStyle =
-        skin.color;
-
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        24,
-        0
-      );
-
-      ctx.lineTo(
-        -15,
-        -13
-      );
-
-      ctx.lineTo(
-        -9,
-        0
-      );
-
-      ctx.lineTo(
-        -15,
-        13
-      );
-
-      ctx.closePath();
-
-      ctx.fill();
-
-
-      ctx.shadowBlur =
-        0;
-
-
-      ctx.fillStyle =
-        skin.accent;
-
-
-      ctx.beginPath();
-
-      ctx.arc(
-        0,
-        0,
-        7,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fill();
-
-
-      ctx.restore();
-
-
-      /*
-        Nieuwe shield-kleur
-      */
-
-      if (
-        player.shield > 0
-      ) {
-
-        ctx.strokeStyle =
-          skin.color;
-
-        ctx.globalAlpha =
-          .35;
-
-        ctx.lineWidth =
-          2;
-
-        ctx.beginPath();
-
-        ctx.arc(
-          player.x,
-          player.y,
-          28,
-          0,
-          Math.PI * 2
-        );
-
-        ctx.stroke();
-
-        ctx.globalAlpha =
-          1;
-
-      }
-
-    };
-
-
-  /* =======================================================
-     START
-  ======================================================= */
-
-  sbApplySkin();
-
-  sbRenderShop();
-
-
-  console.log(
-    "✅ NIEUW SKINS SYSTEEM GELADEN"
-  );
-
-})();
-
+}
