@@ -275,6 +275,52 @@ const bosses = [
 ];
 
 
+const skins = [
+  {
+    id: "cyan",
+    name: "NEON CYAN",
+    primary: "#36d9ff",
+    core: "#dffaff",
+    cost: 0
+  },
+  {
+    id: "crimson",
+    name: "CRIMSON RED",
+    primary: "#ff4268",
+    core: "#ffe0e7",
+    cost: 150
+  },
+  {
+    id: "violet",
+    name: "VOID VIOLET",
+    primary: "#a855ff",
+    core: "#f0e0ff",
+    cost: 150
+  },
+  {
+    id: "gold",
+    name: "GOLDEN ELITE",
+    primary: "#ffad42",
+    core: "#fff4e0",
+    cost: 300
+  },
+  {
+    id: "emerald",
+    name: "EMERALD DASH",
+    primary: "#39ff9a",
+    core: "#e0fff0",
+    cost: 300
+  },
+  {
+    id: "chrome",
+    name: "CHROME SILVER",
+    primary: "#cbd5e1",
+    core: "#ffffff",
+    cost: 500
+  }
+];
+
+
 const upgrades = [
   {
     id: "damage",
@@ -365,6 +411,12 @@ const achievementData = [
     description: "Ontgrendel alle wapens."
   },
   {
+    id: "colorful",
+    name: "SKIN COLLECTOR",
+    icon: "🎨",
+    description: "Ontgrendel alle skins."
+  },
+  {
     id: "explorer",
     name: "EXPLORER",
     icon: "🌌",
@@ -387,10 +439,13 @@ const defaultSave = {
 
   selectedWeapon: "blaster",
   selectedMap: "neon",
+  selectedSkin: "cyan",
 
   unlockedWeapons: ["blaster"],
 
   unlockedMaps: ["neon"],
+
+  unlockedSkins: ["cyan"],
 
   upgrades: {
     damage: 0,
@@ -413,46 +468,14 @@ const defaultSave = {
 };
 
 
-let save = loadSave();
-
-
-function loadSave() {
-
-  try {
-
-    const stored = localStorage.getItem("spacebotsUltraSave");
-
-    if (!stored) {
-      return structuredClone(defaultSave);
-    }
-
-    const data = JSON.parse(stored);
-
-    return {
-      ...structuredClone(defaultSave),
-      ...data,
-      upgrades: {
-        ...defaultSave.upgrades,
-        ...(data.upgrades || {})
-      },
-      settings: {
-        ...defaultSave.settings,
-        ...(data.settings || {})
-      }
-    };
-
-  } catch {
-
-    return structuredClone(defaultSave);
-  }
-}
+let save = structuredClone(defaultSave);
 
 
 function saveGame() {
-  localStorage.setItem(
-    "spacebotsUltraSave",
-    JSON.stringify(save)
-  );
+
+  if (window.Cloud) {
+    window.Cloud.push(save);
+  }
 }
 
 
@@ -518,6 +541,7 @@ const weaponCards = document.getElementById("weaponCards");
 const upgradeCards = document.getElementById("upgradeCards");
 const mapCards = document.getElementById("mapCards");
 const achievementCards = document.getElementById("achievementCards");
+const skinCards = document.getElementById("skinCards");
 
 
 /* =========================================================
@@ -540,6 +564,10 @@ function showScreen(id) {
   if (id === "startScreen") {
     renderMenu();
   }
+
+  if (id === "leaderboardPanel" && window.Cloud) {
+    window.Cloud.loadLeaderboard();
+  }
 }
 
 
@@ -551,6 +579,7 @@ function renderMenu() {
   renderWeapons();
   renderUpgrades();
   renderMaps();
+  renderSkins();
   renderAchievements();
   renderSettings();
 }
@@ -775,6 +804,91 @@ function renderMaps() {
     });
 
     mapCards.appendChild(card);
+
+  });
+}
+
+
+/* =========================================================
+   SKINS
+========================================================= */
+
+function renderSkins() {
+
+  const creditsEl =
+    document.getElementById("skinsCreditsValue");
+
+  if (creditsEl) {
+    creditsEl.textContent = save.credits;
+  }
+
+  skinCards.innerHTML = "";
+
+  skins.forEach(skin => {
+
+    const unlocked =
+      save.unlockedSkins.includes(skin.id);
+
+    const selected =
+      save.selectedSkin === skin.id;
+
+    const card = document.createElement("div");
+
+    card.className =
+      "card" +
+      (selected ? " selected" : "") +
+      (!unlocked ? " locked" : "");
+
+    card.innerHTML = `
+      <div class="card-icon" style="
+        width:38px;height:38px;border-radius:50%;
+        background:${skin.primary};
+        box-shadow:0 0 18px ${skin.primary};
+        border:2px solid ${skin.core};
+      "></div>
+
+      <h3>${skin.name}</h3>
+
+      <p>Robotkleur voor jouw skin.</p>
+
+      <button>
+        ${
+          unlocked
+            ? selected
+              ? "GESELECTEERD"
+              : "SELECTEER"
+            : "KOOP - " + skin.cost + " CREDITS"
+        }
+      </button>
+    `;
+
+    card.querySelector("button").addEventListener("click", () => {
+
+      if (unlocked) {
+
+        save.selectedSkin = skin.id;
+        saveGame();
+        renderSkins();
+
+      } else if (save.credits >= skin.cost) {
+
+        save.credits -= skin.cost;
+        save.unlockedSkins.push(skin.id);
+        save.selectedSkin = skin.id;
+
+        saveGame();
+
+        renderSkins();
+
+        if (save.unlockedSkins.length >= skins.length) {
+          unlockAchievement("colorful");
+        }
+
+      }
+
+    });
+
+    skinCards.appendChild(card);
 
   });
 }
@@ -3053,14 +3167,19 @@ function drawPlayer() {
   );
 
 
+  const skin =
+    skins.find(s => s.id === save.selectedSkin) ||
+    skins[0];
+
+
   /* ENERGY GLOW */
 
   ctx.shadowBlur = 25;
-  ctx.shadowColor = "#36d9ff";
+  ctx.shadowColor = skin.primary;
 
 
   ctx.fillStyle =
-    "#36d9ff";
+    skin.primary;
 
   ctx.beginPath();
 
@@ -3078,7 +3197,7 @@ function drawPlayer() {
 
 
   ctx.fillStyle =
-    "#dffaff";
+    skin.core;
 
   ctx.beginPath();
 
@@ -3970,285 +4089,3 @@ document.getElementById(
 renderMenu();
 
 showScreen("startScreen");
-
-/* =========================================================
-   SKINS
-========================================================= */
-
-const skinData = [
-  {
-    id: "classic",
-    name: "CLASSIC",
-    cost: 0,
-    color: "#36d9ff",
-    accent: "#dffaff"
-  },
-
-  {
-    id: "red",
-    name: "RED COMET",
-    cost: 500,
-    color: "#ff4268",
-    accent: "#ffd1da"
-  },
-
-  {
-    id: "toxic",
-    name: "TOXIC",
-    cost: 1000,
-    color: "#39ff9a",
-    accent: "#d7ffe9"
-  },
-
-  {
-    id: "plasma",
-    name: "PLASMA",
-    cost: 2000,
-    color: "#a855ff",
-    accent: "#f0ddff"
-  },
-
-  {
-    id: "gold",
-    name: "GOLD",
-    cost: 5000,
-    color: "#ffcc33",
-    accent: "#fff1a8"
-  },
-
-  {
-    id: "shadow",
-    name: "SHADOW",
-    cost: 10000,
-    color: "#64748b",
-    accent: "#e2e8f0"
-  }
-];
-
-
-function currentSkin() {
-
-  return (
-    skinData.find(
-      s => s.id === save.skin.selected
-    ) || skinData[0]
-  );
-
-}
-
-
-function createSkinShop() {
-
-  if (
-    document.getElementById(
-      "skinShop"
-    )
-  ) {
-    return;
-  }
-
-  const style =
-    document.createElement(
-      "style"
-    );
-
-  style.textContent = `
-
-    #skinShop {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: none;
-      overflow: auto;
-      padding: 30px 20px;
-      box-sizing: border-box;
-      background:
-        linear-gradient(
-          180deg,
-          #06111f,
-          #020611
-        );
-      color: white;
-      font-family: Arial, sans-serif;
-    }
-
-    #skinShop .skinHead {
-      max-width: 1100px;
-      margin: 0 auto 25px;
-      text-align: center;
-    }
-
-    #skinShop h1 {
-      color: #36d9ff;
-      text-shadow:
-        0 0 18px
-        rgba(54,217,255,.65);
-    }
-
-    #skinCreditsBox {
-      display: inline-block;
-      padding: 10px 18px;
-      border:
-        1px solid #36d9ff;
-      border-radius: 10px;
-      color: #36d9ff;
-      background:
-        rgba(
-          54,
-          217,
-          255,
-          .08
-        );
-      font-weight: bold;
-    }
-
-    #skinCards {
-      max-width: 1100px;
-      margin: auto;
-      display: grid;
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(
-            190px,
-            1fr
-          )
-        );
-      gap: 18px;
-    }
-
-    .skinCard {
-      padding: 20px;
-      text-align: center;
-      border:
-        1px solid
-        rgba(
-          54,
-          217,
-          255,
-          .25
-        );
-      border-radius: 14px;
-      background:
-        rgba(
-          8,
-          20,
-          37,
-          .95
-        );
-      transition: .2s;
-    }
-
-    .skinCard:hover {
-      transform:
-        translateY(-4px);
-      box-shadow:
-        0 0 20px
-        rgba(
-          54,
-          217,
-          255,
-          .2
-        );
-    }
-
-    .skinCard.selected {
-      border-color:
-        #36d9ff;
-      box-shadow:
-        0 0 22px
-        rgba(
-          54,
-          217,
-          255,
-          .38
-        );
-    }
-
-    .skinPreview {
-      width: 62px;
-      height: 62px;
-      margin:
-        0 auto 14px;
-      border-radius: 50%;
-      box-shadow:
-        0 0 22px
-        currentColor;
-    }
-
-    .skinCard button {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      cursor: pointer;
-    }
-
-    #skinBackBtn {
-      display: block;
-      margin:
-        28px auto 0;
-      padding:
-        11px 26px;
-      cursor: pointer;
-    }
-
-  `;
-
-  document.head.appendChild(
-    style
-  );
-
-  const shop =
-    document.createElement(
-      "div"
-    );
-
-  shop.id =
-    "skinShop";
-
-  shop.innerHTML = `
-
-    <div class="skinHead">
-
-      <h1>
-        🤖 ROBOT SKINS
-      </h1>
-
-      <p>
-        Kies een nieuwe stijl
-        voor je robot.
-      </p>
-
-      <div
-        id="skinCreditsBox"
-      >
-        💰
-        <span
-          id="skinCreditsValue"
-        >
-          0
-        </span>
-        CREDITS
-      </div>
-
-    </div>
-
-    <div
-      id="skinCards"
-    ></div>
-
-    <button
-      id="skinBackBtn"
-      class="backBtn"
-      type="button"
-    >
-      ← TERUG
-    </button>
-
-  `;
-
-  document.body.appendChild(
-    shop
-  );
-
-}
